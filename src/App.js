@@ -1,13 +1,25 @@
 import logo from './logo.svg';
 import './App.css';
+import Geolocation from 'react-native-geolocation-service';
+import React, { useState } from 'react';
+
 
 function App() {
+  const [lat, setLocLat] = useState(null);
+  const [long, setLocLong] = useState(null);
+  Geolocation.getCurrentPosition(function (position) {
+    console.log(position)
+    setLocLat(position.coords.latitude);
+    setLocLong(position.coords.longitude);
+    console.log("Latitude and Longitude is: " + lat + " : " + long);
+  });
+
+
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
         </p>
         <a
           className="App-link"
@@ -15,8 +27,8 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
         </a>
+        {lat}, {long}
       </header>
     </div>
   );
