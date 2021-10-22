@@ -1,7 +1,7 @@
 Advanced Software Engineering Group 1
 
 ###  Project task description:
-This is not the complete project but the task is desined on Android app that displays the phone's current GPS position on the phone. React Native code, and their development tools used in the desingn.
+This is not the complete project but the task is designed on Android app that displays the phone's current GPS position on the phone. React Native code, and their development tools used in the desingn.
 
 Author: Jacob Evans and Yunusa Jibrin
 
