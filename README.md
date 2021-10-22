@@ -85,3 +85,5 @@ Open a browser and navigate to `https://localhost:3000/`.
 This application is hosted remotely via AWS Amplify; open a browser and navigate to `https://main.d1a5inltbc7tgm.amplifyapp.com/`.
 
 **Note**: this version of the application is password-protected, and therefore requires that you request the credentials from the team.
+
+
