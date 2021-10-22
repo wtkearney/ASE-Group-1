@@ -32,7 +32,7 @@ Open a command-line interface (CLI) and execute both of the following commands t
 node --version
 ```
 ```
-npm --version`
+npm --version
 ```
 
 To install the dependencies listed in `package.json`, navigate to the project folder in a CLI, then execute the command below.
