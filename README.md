@@ -35,6 +35,8 @@ A live version of this app can be found at:
 This is password protected.
 ## Help 
 For the details of the readme file follow the link below:
-https://sites.google.com/view/readme-reactnative/home
 
+-https://sites.google.com/view/readme-reactnative/home
+
+-If you need help choosing a license, use https://choosealicense.com/                                                                                 
 
