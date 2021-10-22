@@ -1,11 +1,15 @@
 Advanced Software Engineering Group 1
 
-Author: Jacob Evans
+###  Project task description:
+This is not the complete project but the task is desined on Android app that displays the phone's current GPS position on the phone. React Native code, and their development tools used in the desingn.
 
-Version: 1.0
+Author: Jacob Evans and Yunusa Jibrin
+
+Version: 1.1
 
 Dependancies: 
 - Node (V14.17.3+)
+   - follow links to choose: https://nodejs.org/fa/blog/release/v14.17.3/
 - See package.json
 
 
@@ -18,9 +22,10 @@ Following install, run:
 
 ## 'npm start'
 
-This will start a local server on your machine at: 
+This will start a local server on your machine at:
+run the app in the development mode:
 
-## "http://localhost:3000/'
+## [Local host] (https://localhost:3000/ "Local host")
 
 
 A live version of this app can be found at:
@@ -28,5 +33,8 @@ A live version of this app can be found at:
 ## "https://main.d1a5inltbc7tgm.amplifyapp.com/"
 
 This is password protected.
+## Help 
+For the details of the readme file follow the link below:
+https://sites.google.com/view/readme-reactnative/home
 
 
