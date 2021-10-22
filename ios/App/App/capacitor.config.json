@@ -1,0 +1,8 @@
+{
+	"appId": "io.ionic.geoloc",
+	"appName": "GeoLoc",
+	"bundledWebRuntime": false,
+	"npmClient": "npm",
+	"webDir": "build",
+	"cordova": {}
+}
