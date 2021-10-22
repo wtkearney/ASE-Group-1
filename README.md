@@ -1,4 +1,4 @@
-Advanced Software Engineering Group 1
+Advanced Software Engineering Asssignment Group 1
 ### Table of content
    - Project description
    - Dependencies
