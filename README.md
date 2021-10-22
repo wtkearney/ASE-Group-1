@@ -1,70 +1,87 @@
-# Getting Started with Create React App
+# Cross-Platform Mobile Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Advanced Software Engineering, Group 1.  
+Written by Jack Lloyd, Jacob Evans, and Yunusa Jibrin.
 
-## Available Scripts
+## Table of Contents
 
-In the project directory, you can run:
+1. Introduction
+2. Install
+3. Build
+    1. Android
+    2. iOS
+4. Run
+    1. Local
+    2. Remote
 
-### `npm start`
+## 1: Introduction
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+This GPS prototype displays your current position in terms of longitude and latitude. It is built using the React Native framework, which is cross-platform through the usage of the Ionic and Capacitor frameworks, meaning it is available for both Android and iOS, and remotely hosted via AWS (Amazon Web Services) Amplify.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+The following sections detail the process of installing the dependencies, building a project for Android and/or iOS, and running the application locally and/or remotely.
 
-### `npm test`
+## 2: Install
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Node.js is an open-source JavaScript runtime environment; it is required to install, build, and run this application. Use the link below to download and install `node`, alongside the package manager, `npm`.
 
-### `npm run build`
+**Node.js**: `https://nodejs.org/download/`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Open a command-line interface (CLI) and execute both of the following commands to validate your installation.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+node --version
+```
+```
+npm --version`
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+To install the dependencies listed in `package.json`, navigate to the project folder in a CLI, then execute the command below.
 
-### `npm run eject`
+```
+npm install
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+This will automatically install said dependencies.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 3: Build
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+This section describes how to build a project file/folder for either Android Studio or Xcode, for Android and iOS, respectively.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+**Android Studio**: `https://developer.android.com/studio`  
+**Xcode**: `https://developer.apple.com/xcode`
 
-## Learn More
+### 3.1: Android
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Use the command below to build an Android Studio project.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+npx cap open android
+```
 
-### Code Splitting
+### 3.2: iOS
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Use the command below to build an Xcode project.
 
-### Analyzing the Bundle Size
+```
+npx cap open ios
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## 4: Run
 
-### Making a Progressive Web App
+This section does not cover building a project for Android nor iOS, it covers running the application locally and/or remotely in a browser.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### 4.1: Local
 
-### Advanced Configuration
+To host the application locally, start a local server on your machine by executing the command below.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```
+npm start
+```
 
-### Deployment
+Open a browser and navigate to `https://localhost:3000/`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### 4.2: Remote
 
-### `npm run build` fails to minify
+This application is hosted remotely via AWS Amplify; open a browser and navigate to `https://main.d1a5inltbc7tgm.amplifyapp.com/`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Note**: this version of the application is password-protected, and therefore requires that you request the credentials from the team.
