@@ -1,0 +1,9 @@
+{
+    "name": "GeoLoc",
+    "integrations": {
+      "capacitor": {}
+    },
+    "type": "react"
+  }
+
+  
