@@ -1,5 +1,5 @@
 Advanced Software Engineering Asssignment Group 1
-### Table of content
+### Table of content:
    - Project description
    - Dependencies
    - nmp install
@@ -40,7 +40,7 @@ A live version of this app can be found at:
 
 This is password protected.
 ### Help 
-For the details of how to get started with reactnative link below:
+For the details of how to get started with reactnative follow link below:
 
 -https://sites.google.com/view/readme-reactnative/home
 
