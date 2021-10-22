@@ -40,7 +40,7 @@ A live version of this app can be found at:
 
 This is password protected.
 ### Help 
-For the details of the readme file follow the link below:
+For the details of how to get started with reactnative link below:
 
 -https://sites.google.com/view/readme-reactnative/home
 
