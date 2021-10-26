@@ -1,7 +1,7 @@
 # Cross-Platform Mobile Application
 
 Advanced Software Engineering, Group 1.  
-Team Members
+
 - Callum Crawford
 - Jack Lloyd
 - Jacob Evans
