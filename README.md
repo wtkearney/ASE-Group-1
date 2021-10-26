@@ -1,7 +1,13 @@
 # Cross-Platform Mobile Application
 
 Advanced Software Engineering, Group 1.  
-Written by Jack Lloyd, Jacob Evans, Yunusa Jibrin, and Will Kearney
+Team Members
+- Callum Crawford
+- Jack Lloyd
+- Jacob Evans
+- Robert Vava
+- Will Kearney
+- Yunusa Jibrin
 
 ## Table of Contents
 
