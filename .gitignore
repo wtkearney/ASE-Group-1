@@ -3,6 +3,13 @@
 # testing
 .expo/
 
+# database
+*.db
+
+# iOS build files
+/ios/App/Podfile
+*.xcodeproj
+
 # dependencies
 /node_modules
 /.pnp
