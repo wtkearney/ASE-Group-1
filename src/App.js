@@ -2,6 +2,7 @@ import './App.css';
 import Geolocation from 'react-native-geolocation-service';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import  Button from '@mui/material/Button';
 // import DeviceInfo from 'react-native-device-info';
 
 
@@ -64,24 +65,15 @@ function App() {
       }, MINUTE);
       return () => clearInterval(interval);
     }, [lat,long]);
-
-
-  function Mode() {
-    setMode(!showMode);
-    
-  }
   
-
-
-
   return (
     <div className="App">
       <header className="App-header">
-        { showId ? ip.toString() : "–" } 
-        <button type ="button" onClick={() => setShowId(!showId)}> {showId ? "Hide ID" : "Show ID"} </button>  
+        { showId ? ip.toString() : "–" }   
+        <Button onClick={() => setShowId(!showId)}> {showId ? "Hide ID" : "Show ID"} </Button>
         {showLocation ? lat + "" + long : "–"}
-        <button type="button" onClick={() => setShowLocation(!showLocation)}> {showLocation ? "Hide Location" : "Show Location"} </button>
-        <button type="button" onClick={SendCoordinates}> Send Coordinates </button>
+        <Button onClick={() => setShowLocation(!showLocation)}> {showLocation ? "Hide Location" : "Show Location"} </Button>
+        <Button onClick={SendCoordinates}> Send Coordinates </Button>
            
       </header>
 
