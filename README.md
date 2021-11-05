@@ -76,14 +76,8 @@ Keep in mind that emulators require a lot of RAM, so you may find that bundling 
 
 1. Navigate to the project directory
 2. Run ```npm run build```.
-2. Run ```npx cap open android```.
+3. Run ```npx cap open android```.
 
 ### 3.2: Using a Physical Device
 
-#### 3.2.1: iOS
-
-1. TODO
-
-#### 3.2.2: Android
-
-1. TODO
+The process of deploying to a device is very similar to simulation; follow the same steps and choose to build/run on a conencted device instead.
