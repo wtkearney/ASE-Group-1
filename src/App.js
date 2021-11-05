@@ -1,6 +1,6 @@
 import './App.css';
 import Geolocation from 'react-native-geolocation-service';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 // import DeviceInfo from 'react-native-device-info';
 
@@ -16,7 +16,22 @@ function App() {
   const [long, setLocLong] = useState(null); 
   const [showLocation, setShowLocation] = useState(false);
   const [showId, setShowId] = useState(false);
-  const [uid, setDeviceId] = useState(1234);
+  const [ip, setIP] = useState('');
+  const [showMode, setMode] = useState(false);
+  
+  const getData = async () => {
+    const res = await axios.get('https://geolocation-db.com/json/')
+    console.log(res.data);
+    setIP(res.data.IPv4)
+  }
+
+  useEffect( () => {
+    //passing getData method to the lifecycle method
+    getData()
+
+  }, [])
+
+  
 
   Geolocation.getCurrentPosition(function (position) {
     console.log(position)
@@ -24,25 +39,50 @@ function App() {
     setLocLong(position.coords.longitude);
     // setDeviceId(DeviceInfo.getUniqueId());
     console.log("Latitude and Longitude is: " + lat + " : " + long); 
-    const body = { uid: uid, longitude: long, latitude: lat };
     
-    axios.post(uri + path, body, headers).then(console.log).catch(console.error); 
+  
+    
   });
 
-  function Test() {
-    console.log('Anything')
+  function SendCoordinates() {
+    const body = { uid: ip, longitude: long, latitude: lat };
+    axios.post(uri + path, body, headers).then(console.log).catch(console.error); 
   }
+
+  const MINUTE = 3000
+    useEffect(() => {
+      const interval = setInterval(() => {
+        var body = {
+          uid: "test",
+          longitude: long,
+          latitude: lat
+        }
+        axios.post(uri + path, body, headers).then(
+          console.log()
+        );
+  
+      }, MINUTE);
+      return () => clearInterval(interval);
+    }, [lat,long]);
+
+
+  function Mode() {
+    setMode(!showMode);
+    
+  }
+  
+
+
 
   return (
     <div className="App">
       <header className="App-header">
-
-        { showId ? uid.toString() : "–" } 
+        { showId ? ip.toString() : "–" } 
         <button type ="button" onClick={() => setShowId(!showId)}> {showId ? "Hide ID" : "Show ID"} </button>  
         {showLocation ? lat + "" + long : "–"}
-        <button type="button" onClick={() => setShowLocation(!showLocation)} > {showLocation ? "Hide Location" : "Show Location"} </button>
-        <button type="button" onClick={Test}> Send Coordinates </button>
-        
+        <button type="button" onClick={() => setShowLocation(!showLocation)}> {showLocation ? "Hide Location" : "Show Location"} </button>
+        <button type="button" onClick={SendCoordinates}> Send Coordinates </button>
+           
       </header>
 
     </div>
