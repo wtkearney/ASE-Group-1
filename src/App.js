@@ -66,7 +66,7 @@ function App () {
         { showIp ? ip.toString() : "—" }
         <Button onClick={() => setShowIp(!showIp)}>{showIp ? "Hide IP" : "Show IP"}</Button>
         <br/>
-        {showLocation ? latitude.toString() + ' , ' + longitude.toString() : "—"}
+        {showLocation ? latitude + ' , ' + longitude : "—"}
         <Button onClick={() => setShowLocation(!showLocation)}>{showLocation ? "Hide Location" : "Show Location"}</Button>
         <Button onClick={SendLocation} disabled={automaticMode}>Send Location</Button>
         <br/>
