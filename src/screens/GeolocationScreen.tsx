@@ -2,9 +2,19 @@ import React, { useState } from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import { Text, View, TouchableOpacity } from "react-native";
+import axios from 'axios';
 import {RootStackParamList} from './RootStackParams';
 import * as Location from 'expo-location';
 import styles from "../../stylesheet";
+
+const serverURL = "https://geolocation-express-demo.herokuapp.com/"
+const path = 'api/log-location';
+
+const headers = {
+    headers : {
+        "Content-Type": "application/json"
+    }
+};
 
 type geolocationScreenProp = StackNavigationProp<RootStackParamList, 'Geolocation'>;
 
@@ -16,6 +26,8 @@ const GeolocationScreen = () => {
     const [statusText, setStatusText] = useState("Waiting for user input.");
     const [latText, setLatText] = useState('');
     const [longText, setLongText] = useState('');
+    const [latNum, setLatNum] = useState(0);
+    const [longNum, setLongNum] = useState(0);
 
     // function to get our location
     const getLocation = async () => {
@@ -36,10 +48,29 @@ const GeolocationScreen = () => {
             setLocation(location);
 
             setStatusText('Location retrieved!');
-            setLatText(location.coords.latitude.toFixed(7))
-            setLongText(location.coords.longitude.toFixed(7))
+            setLatText(location.coords.latitude.toFixed(7));
+            setLongText(location.coords.longitude.toFixed(7));
+
+            setLatNum(location.coords.latitude);
+            setLongNum(location.coords.longitude);
         }
     };
+
+    async function postLocation() {
+        const payload = {
+            userEmail: "demoEmail",
+            ipAddress: "demoIPAddress",
+            lat: latNum,
+            long: longNum
+        };
+
+        console.log("Sending post request...");
+
+        let res = await axios.post(serverURL + path, payload, headers);
+    
+        let data = res.data;
+        console.log(data);
+      }
 
     return (
         <View style={styles.container}>
@@ -59,10 +90,18 @@ const GeolocationScreen = () => {
             <View style={styles.space}/>
             <TouchableOpacity
                 style={styles.appButtonContainer}
+                onPress={postLocation}
+            >
+              <Text style={styles.appButtonText}>Log Location</Text>
+            </TouchableOpacity>
+            <View style={styles.space}/>
+            <TouchableOpacity
+                style={styles.appButtonContainer}
                 onPress={() => navigation.navigate("Home")}
             >
               <Text style={styles.appButtonText}>Go back to Home</Text>
             </TouchableOpacity>
+            
 
       </View>
       );
