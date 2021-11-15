@@ -1,24 +1,13 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {Router} from './src/routes/Router';
+import {AuthProvider} from './src/contexts/Auth';
 
-import HomeScreen from "./src/screens/HomeScreen";
-import GeolocationScreen from "./src/screens/GeolocationScreen";
-import {RootStackParamList} from './src/screens/RootStackParams';
-
-const Stack = createStackNavigator<RootStackParamList>();
-
-export default function App() {
+const App = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false
-        }}
-      >
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Geolocation" component={GeolocationScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <AuthProvider>
+      <Router/>
+    </AuthProvider>
   );
 };
+
+export default App;
