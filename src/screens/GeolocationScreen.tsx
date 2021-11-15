@@ -2,24 +2,19 @@ import React, { useState } from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import { Text, View, TouchableOpacity } from "react-native";
-import axios from 'axios';
+
 import {RootStackParamList} from './RootStackParams';
 import * as Location from 'expo-location';
 import styles from "../../stylesheet";
 
-const serverURL = "https://geolocation-express-demo.herokuapp.com/"
-const path = 'api/log-location';
-
-const headers = {
-    headers : {
-        "Content-Type": "application/json"
-    }
-};
+import {apiService} from "../services/apiService";
 
 type geolocationScreenProp = StackNavigationProp<RootStackParamList, 'Geolocation'>;
 
 const GeolocationScreen = () => {
     const navigation = useNavigation<geolocationScreenProp>();
+
+    let userEmail = 'demoEmail';
 
     // define some state variables
     const [location, setLocation] = useState({});
@@ -56,22 +51,6 @@ const GeolocationScreen = () => {
         }
     };
 
-    async function postLocation() {
-        const payload = {
-            userEmail: "demoEmail",
-            ipAddress: "demoIPAddress",
-            lat: latNum,
-            long: longNum
-        };
-
-        console.log("Sending post request...");
-
-        let res = await axios.post(serverURL + path, payload, headers);
-    
-        let data = res.data;
-        console.log(data);
-      }
-
     return (
         <View style={styles.container}>
             <Text style={styles.title}>React Native Geolocation</Text>
@@ -90,7 +69,7 @@ const GeolocationScreen = () => {
             <View style={styles.space}/>
             <TouchableOpacity
                 style={styles.appButtonContainer}
-                onPress={postLocation}
+                onPress={() => apiService.postLocation(userEmail, latNum, longNum)}
             >
               <Text style={styles.appButtonText}>Log Location</Text>
             </TouchableOpacity>
