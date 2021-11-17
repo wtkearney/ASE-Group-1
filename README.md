@@ -7,7 +7,7 @@ Advanced Software Engineering, Group 1.
 - Jacob Evans
 - Robert Vava
 - Will Kearney
-- Yunusa Jibrin
+- Yunusa Jibrin iheanacho
 
 ## Table of Contents
 
