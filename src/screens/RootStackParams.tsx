@@ -5,4 +5,5 @@ export type RootStackParamList = {
     Geolocation: undefined;
     SignUp: undefined;
     SignIn: undefined;
+    Map: undefined;
 };

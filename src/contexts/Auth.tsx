@@ -1,14 +1,17 @@
 import React, {createContext, useState, useContext, useEffect} from 'react';
-import * as SecureStore from 'expo-secure-store';
+// import * as SecureStore from 'expo-secure-store';
 
 import {AuthData, authService} from '../services/authService';
 
 type AuthContextData = {
   authData?: AuthData;
   loading: boolean;
+  lat: number;
+  long: number;
   signUp(firstName: string, lastName: string, email: string, password: string): Promise<void>;
   signIn(email: string, password: string): Promise<void>;
   signOut(): void;
+  setLatAndLong(lat: number, long: number): void;
 };
 
 // Create the Auth Context with the data type specified and an empty object
@@ -17,55 +20,77 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 const AuthProvider: React.FC = ({children}) => {
   const [authData, setAuthData] = useState<AuthData>();
 
+  const [lat, setLat] = useState<number>(0.0);
+  const [long, setLong] = useState<number>(0.0);
+
   // AuthContext starts with loading = true and stays like that until the data is loaded from storage
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Every time the App is opened, this provider is rendered and calls loadStorageData
-    loadStorageData();
+    // loadStorageData();
+    startUp();
   }, []);
-
-  async function loadStorageData(): Promise<void> {
-    try {
-      // Try get the data from Async Storage
-      const authDataSerialized = await SecureStore.getItemAsync('@AuthData');
-      
-      if (authDataSerialized) {
-        // If there is data, it's converted to an Object and the state is updated
-        const _authData: AuthData = JSON.parse(authDataSerialized);
-        setAuthData(_authData);
-      }
-    } catch (error) {
-    } finally {
-      // loading finished
-      setLoading(false);
-    }
+  async function startUp(): Promise<void> {
+    console.log("Starting up app....");
+    setLoading(false);
   }
 
-    const signUp = async (firstName: string, lastName: string, email: string, _password: string) => {
-        console.log("Calling signUp from Auth.tsx....")
+  // async function loadStorageData(): Promise<void> {
+  //   try {
+  //     // Try get the data from Async Storage
+  //     const authDataSerialized = await SecureStore.getItemAsync('@AuthData');
+      
+  //     if (authDataSerialized) {
+  //       // If there is data, it's converted to an Object and the state is updated
+  //       const _authData: AuthData = JSON.parse(authDataSerialized);
+  //       setAuthData(_authData);
+  //     }
+  //   } catch (error) {
+  //   } finally {
+  //     // loading finished
+  //     setLoading(false);
+  //   }
+  // }
+
+    const setLatAndLong = (lat: number, long: number) => {
+      setLat(lat);
+      setLong(long);
+      // console.log("Updated lat and long in auth context: " + lat + " " + long);
+    }
+
+    const signUp = async (firstName: string, lastName: string, email: string, _password: string): Promise<void> => {
+      return new Promise((resolve, reject) => {
         // call the service passing credential (email and password).
-
-        const _authData = await authService.signUp(firstName, lastName, email, _password);
-
-        // Set the data in the context, so the App can be notified and send the user to the AuthStack
-        setAuthData(_authData);
-
-        // Persist the data in the Async Storage to be recovered in the next user session.
-        await SecureStore.setItemAsync("AuthData", JSON.stringify(_authData));
+        authService.signUp(firstName, lastName, email, _password)
+          .then(_authData => {
+            // Set the data in the context, so the App can be notified and send the user to the AuthStack
+            setAuthData(_authData);
+            // Persist the data in the Async Storage to be recovered in the next user session.
+            // await SecureStore.setItemAsync("AuthData", JSON.stringify(_authData));
+            resolve();
+          }).catch(error => {
+            console.log(error);
+            reject();
+          });
+      })
     };
 
-    const signIn = async (email: string, _password: string) => {
-        console.log("Calling signIn from Auth.tsx....")
+    const signIn = async (email: string, _password: string): Promise<void> => {
+      return new Promise((resolve, reject) => {
         // call the service passing credential (email and password).
-
-        const _authData = await authService.signIn(email, _password);
-
-        // Set the data in the context, so the App can be notified and send the user to the AuthStack
-        setAuthData(_authData);
-
-        // Persist the data in the Async Storage to be recovered in the next user session.
-        await SecureStore.setItemAsync("AuthData", JSON.stringify(_authData));
+        authService.signIn(email, _password)
+          .then(_authData => {
+            // Set the data in the context, so the App can be notified and send the user to the AuthStack
+            setAuthData(_authData);
+            // Persist the data in the Async Storage to be recovered in the next user session.
+            // await SecureStore.setItemAsync("AuthData", JSON.stringify(_authData));
+            resolve();
+          }).catch(error => {
+            console.log(error);
+            reject();
+          });
+      }) // end promise
     };
 
   const signOut = async () => {
@@ -73,12 +98,12 @@ const AuthProvider: React.FC = ({children}) => {
     setAuthData(undefined);
 
     // Remove the data from storage to NOT be recoverable in next session.
-    await SecureStore.deleteItemAsync('AuthData');
+    // await SecureStore.deleteItemAsync('AuthData');
   };
 
   return (
     // This component will be used to encapsulate the whole App, so all components will have access to the Context
-    <AuthContext.Provider value={{authData, loading, signUp, signIn, signOut}}>
+    <AuthContext.Provider value={{authData, loading, lat, long, signUp, signIn, signOut, setLatAndLong}}>
       {children}
     </AuthContext.Provider>
   );

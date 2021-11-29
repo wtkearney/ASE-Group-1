@@ -14,8 +14,15 @@ const SignInScreen = () => {
     const [loading, isLoading] = useState(false);
     const auth = useAuth();
     const signIn = async (email: string, password: string) => {
+
         isLoading(true);
-        await auth.signIn(email, password);
+
+        auth.signIn(email, password)
+            .then((response) => {
+                // console.log("Sign up successful")
+            }).catch((error) => {
+                isLoading(false);
+            });
     };
     const [email, onChangeEmail] = React.useState("");
     const [password, onChangePassword] = React.useState("");

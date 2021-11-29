@@ -9,6 +9,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 
+    map: {
+      ...StyleSheet.absoluteFillObject,
+    },
+    
     container: {
         flex: 1,
         backgroundColor: '#fff',

@@ -5,6 +5,7 @@ import { Text, View, TouchableOpacity } from "react-native";
 import {RootStackParamList} from './RootStackParams';
 import styles from "../../stylesheet";
 import {useAuth} from '../contexts/Auth';
+import * as Location from 'expo-location';
 
 type homeScreenProp = StackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -16,9 +17,26 @@ const HomeScreen = () => {
         isLoading(true);
         await auth.signOut();
     };
-  
+
+  // function to get our location
+  const getLocation = async () => {
+
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    let location = await Location.getCurrentPositionAsync({});
+
+    if (location) {
+        auth.setLatAndLong(location.coords.latitude, location.coords.longitude);
+        console.log("Lat: " + auth.lat);
+        console.log("Long: " + auth.long);
+    }
+  };
+
+  getLocation();
+
   return (
     <View style={styles.backgroundContainer}>
+      <Text style={styles.alreadyHaveAccountText}>Welcome, {auth.authData?.firstName}!</Text>
+
       <TouchableOpacity
         style={styles.alreadyHaveAccountContainer}
         onPress={() => signOut()}
@@ -29,12 +47,13 @@ const HomeScreen = () => {
 
       <Text style={styles.title}>Home screen</Text>
       <View style={styles.space}/>
-        <TouchableOpacity
+      <TouchableOpacity
           style={styles.appButtonContainer}
-          onPress={() => navigation.navigate("Geolocation")}
+          onPress={() => navigation.navigate("Map")}
         >
-          <Text style={styles.appButtonText}>Go to geolocation demo</Text>
+          <Text style={styles.appButtonText}>Go to map</Text>
         </TouchableOpacity>
+        <View style={styles.space}/>
 
   </View>
   );

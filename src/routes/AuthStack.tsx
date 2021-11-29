@@ -7,7 +7,7 @@ import {RootStackParamList} from '../screens/RootStackParams';
 const Stack = createStackNavigator<RootStackParamList>();
 
 export const AuthStack = () => {
-    console.log("Auth Stack");
+  // console.log("Auth Stack");
   return (
     <Stack.Navigator>
         <Stack.Screen name="SignUp" component={SignUpScreen} />

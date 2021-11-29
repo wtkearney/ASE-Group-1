@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ActivityIndicator, TouchableOpacity, Text, View, TextInput, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView} from 'react-native';
 import {RootStackParamList} from './RootStackParams';
 import styles from "../../stylesheet";
 import {useAuth} from '../contexts/Auth';
+import { AxiosError } from 'axios';
 
 type signUpScreenProp = StackNavigationProp<RootStackParamList, 'SignUp'>;
 
@@ -12,11 +13,37 @@ const SignUpScreen = () => {
 
     const navigation = useNavigation<signUpScreenProp>();
 
+    function emailIsValid (email: string) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    }
+
     const [loading, isLoading] = useState(false);
     const auth = useAuth();
     const signUp = async (firstName: string, lastName: string, email: string, password: string) => {
+        
+        // do some error checking
+        if (firstName.length <= 0) {
+            alert("Please enter a first name");
+            return;
+        } else if (lastName.length <= 0) {
+            alert("Please enter a last name");
+            return;
+        } else if (!emailIsValid(email)) {
+            alert("Please enter a valid email address");
+            return;
+        } else if (password.length < 4) {
+            alert("Please enter a password of minimum length 4");
+            return;
+        }
+
         isLoading(true);
-        await auth.signUp(firstName, lastName, email, password);
+
+        auth.signUp(firstName, lastName, email, password)
+            .then((response) => {
+                // console.log("Sign up successful")
+            }).catch((error) => {
+                isLoading(false);
+            });
     };
     const [firstName, onChangeFirstName] = React.useState("");
     const [lastName, onChangeLastName] = React.useState("");

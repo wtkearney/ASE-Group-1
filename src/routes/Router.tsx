@@ -10,7 +10,7 @@ export const Router = () => {
   const {authData, loading} = useAuth();
 
   if (loading) {
-      console.log("Loading loading screen...")
+    console.log("Loading screen...")
     return <Loading />;
   }
 
@@ -18,6 +18,7 @@ export const Router = () => {
       
     <NavigationContainer>
       {authData ? <AppStack /> : <AuthStack />}
+      {/* {authData ? <AuthStack  /> : <AppStack />} */}
     </NavigationContainer>
   );
 };
