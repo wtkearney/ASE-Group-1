@@ -10,8 +10,8 @@ export const AuthStack = () => {
   // console.log("Auth Stack");
   return (
     <Stack.Navigator>
-        <Stack.Screen name="SignUp" component={SignUpScreen} />
-        <Stack.Screen name="SignIn" component={SignInScreen} />
+        <Stack.Screen name="SignUp" options={{ title: 'Sign Up' }} component={SignUpScreen} />
+        <Stack.Screen name="SignIn" options={{ title: 'Sign In' }} component={SignInScreen} />
     </Stack.Navigator>
   );
 };
