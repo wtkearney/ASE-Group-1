@@ -114,7 +114,6 @@ const signIn = async (userEmail: string, _password: string): Promise<AuthData> =
             }
         })
         .catch(err => {
-            console.log(err.response);
             if (err.response) {
                 // client received an error response (5xx, 4xx)
                 if (err.response.status == 401) {
@@ -124,7 +123,8 @@ const signIn = async (userEmail: string, _password: string): Promise<AuthData> =
                     alert("No user account found with that email address.")
                     reject(new Error("No user account found with that email address."));
                 } else {
-                    console.log("Unknown response error code.");
+                    console.log("Unknown response error code: " + err.response.status);
+                    alert("Unknown response error code: " + err.response.status);
                     reject(new Error());
                 }
             } else if (err.request) {
