@@ -56,10 +56,8 @@ const AuthProvider: React.FC = ({children}) => {
   // }
 
     const setLatAndLong = async (lat: number, long: number): Promise<void>  => {
-      console.log("Current Lat and Long in context: " + lat + long)
       setLat(lat);
       setLong(long);
-      console.log("Set Lat and Long in context: " + lat + long)
 
       return new Promise((resolve) => {resolve()});
       // console.log("Updated lat and long in auth context: " + lat + " " + long);
