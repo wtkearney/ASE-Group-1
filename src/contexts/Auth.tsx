@@ -1,7 +1,8 @@
 import React, {createContext, useState, useContext, useEffect} from 'react';
+import { resolve } from 'url';
 // import * as SecureStore from 'expo-secure-store';
 
-import {AuthData, authService} from '../services/authService';
+import {AuthData, PostcodeData, authService} from '../services/authService';
 
 type AuthContextData = {
   authData?: AuthData;
@@ -11,7 +12,8 @@ type AuthContextData = {
   signUp(firstName: string, lastName: string, email: string, password: string): Promise<void>;
   signIn(email: string, password: string): Promise<void>;
   signOut(): void;
-  setLatAndLong(lat: number, long: number): void;
+  setLatAndLong(lat: number, long: number): Promise<void>;
+  getNearestPostcodes(lat: number, long: number): Promise<PostcodeData>;
 };
 
 // Create the Auth Context with the data type specified and an empty object
@@ -53,11 +55,27 @@ const AuthProvider: React.FC = ({children}) => {
   //   }
   // }
 
-    const setLatAndLong = (lat: number, long: number) => {
+    const setLatAndLong = async (lat: number, long: number): Promise<void>  => {
+      console.log("Current Lat and Long in context: " + lat + long)
       setLat(lat);
       setLong(long);
+      console.log("Set Lat and Long in context: " + lat + long)
+
+      return new Promise((resolve) => {resolve()});
       // console.log("Updated lat and long in auth context: " + lat + " " + long);
     }
+
+    const getNearestPostcodes = async (lat: number, long: number): Promise<PostcodeData> => {
+      return new Promise((resolve, reject) => {
+        authService.getNearestPostcodes(lat, long)
+        .then(postcodeData => {
+          resolve(postcodeData);
+        })
+        .catch(error => {
+          reject("There was an error getting nearest postcodes...");
+        })
+      })
+    };
 
     const signUp = async (firstName: string, lastName: string, email: string, _password: string): Promise<void> => {
       return new Promise((resolve, reject) => {
@@ -103,7 +121,7 @@ const AuthProvider: React.FC = ({children}) => {
 
   return (
     // This component will be used to encapsulate the whole App, so all components will have access to the Context
-    <AuthContext.Provider value={{authData, loading, lat, long, signUp, signIn, signOut, setLatAndLong}}>
+    <AuthContext.Provider value={{authData, loading, lat, long, signUp, signIn, signOut, setLatAndLong, getNearestPostcodes}}>
       {children}
     </AuthContext.Provider>
   );

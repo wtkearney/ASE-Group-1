@@ -10,6 +10,7 @@ export const serverURL = configData.SERVER_URL;
 // paths for REST API
 const apiPath = '/api';
 const usersPath = '/users';
+const postcodesPath = '/postcodes';
 
 const headers = {
     headers : {
@@ -23,6 +24,27 @@ export type AuthData = {
     firstName: string;
     lastName: string;
   };
+
+export type PostcodeData = {
+    nearestPostcodes: Array<string>;
+}
+
+
+const getNearestPostcodes = async (lat: number, long: number): Promise<PostcodeData> => {
+
+    return new Promise((resolve, reject) => {
+        
+        axios.get(serverURL + postcodesPath + `/getNearestPostcodes?long=${long}&lat=${lat}`)
+        .then((response) => {
+            resolve({
+                nearestPostcodes: response.data,
+            });
+        })
+        .catch(err => {
+            reject(new Error("This is the error you are looking for!"));
+        }); // end catch
+    }); // end Promise
+};
 
 const signUp = async (firstName: string, lastName: string, userEmail: string, _password: string): Promise<AuthData> => {
 
@@ -114,6 +136,7 @@ const signIn = async (userEmail: string, _password: string): Promise<AuthData> =
             }
         })
         .catch(err => {
+            // console.log(err.response);
             if (err.response) {
                 // client received an error response (5xx, 4xx)
                 if (err.response.status == 401) {
@@ -142,5 +165,6 @@ const signIn = async (userEmail: string, _password: string): Promise<AuthData> =
   
 export const authService = {
     signIn,
-    signUp
+    signUp,
+    getNearestPostcodes
 };
