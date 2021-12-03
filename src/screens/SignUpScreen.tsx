@@ -34,6 +34,9 @@ const SignUpScreen = () => {
         } else if (password.length < 4) {
             alert("Please enter a password of minimum length 4");
             return;
+        } else if (password !== passwordConfirm) {
+            alert("Password was entered incorrectly for confirmation");
+            return;
         }
 
         isLoading(true);
@@ -49,6 +52,7 @@ const SignUpScreen = () => {
     const [lastName, onChangeLastName] = React.useState("");
     const [email, onChangeEmail] = React.useState("");
     const [password, onChangePassword] = React.useState("");
+    const [passwordConfirm, onChangePasswordConfirm] = React.useState("");
 
     return (
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -96,6 +100,16 @@ const SignUpScreen = () => {
                         onChangeText={onChangePassword}
                         value={password}
                         placeholder="Password"
+                        autoCorrect={false}
+                        clearButtonMode='while-editing'
+                        secureTextEntry={true}
+                        textContentType='password'
+                    />
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={onChangePasswordConfirm}
+                        value={passwordConfirm}
+                        placeholder="Confirm Password"
                         autoCorrect={false}
                         clearButtonMode='while-editing'
                         secureTextEntry={true}
