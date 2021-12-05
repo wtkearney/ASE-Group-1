@@ -36,17 +36,16 @@ const AuthProvider: React.FC = ({children}) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Every time the App is opened, this provider is rendered and calls loadStorageData
-    // loadStorageData();
+    // Every time the App is opened, do this....
     startUp();
   }, []);
 
   // everytime locationData is updated, get new neary postcodes
   useEffect(() => {
-    getNearestPostcodes(); // This is be executed when lat state changes
+    getNearestPostcodes();
   }, [locationData])
 
-  async function startUp(): Promise<void> {
+  const startUp = async () => {
     console.log("Starting up app....");
     setLoading(false);
     await getLatLong();
@@ -71,11 +70,10 @@ const AuthProvider: React.FC = ({children}) => {
   const getNearestPostcodes = async () => {
     
     if (locationData) {
-      console.log("Making API request for nearest postcodes: " + locationData);
       let postcodeData = await authService.getNearestPostcodes(locationData.lat, locationData.long);
 
       setNearestPostcodes(postcodeData);
-      console.log(postcodeData)
+      console.log(postcodeData);
     }
 
   };
