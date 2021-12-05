@@ -29,7 +29,6 @@ export type PostcodeData = {
     nearestPostcodes: Array<string>;
 }
 
-
 const getNearestPostcodes = async (lat: number, long: number): Promise<PostcodeData> => {
 
     return new Promise((resolve, reject) => {
