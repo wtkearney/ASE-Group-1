@@ -96,8 +96,10 @@ function StackNav() {
       options={
         ({ navigation }) => ({
           headerShown: true,
+          headerTitle: "Account Info",
           gestureEnabled: true,
          presentation: 'modal',
+         headerTitleStyle: styles.headerStyle,
          headerStyle: {backgroundColor: colors.darkestColor,
           shadowColor: colors.midColor, // this covers iOS
           elevation: 0, // this covers Android

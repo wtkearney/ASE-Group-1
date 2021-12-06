@@ -19,7 +19,6 @@ const headers = {
 };
 
 export type AuthData = {
-    token: string;
     userEmail: string;
     firstName: string;
     lastName: string;
@@ -65,7 +64,6 @@ const signUp = async (firstName: string, lastName: string, userEmail: string, _p
                 // user account was created successfully
                 alert("User account created successfully! You are now logged in.")
                 resolve({
-                    token: response.data.token,
                     userEmail: response.data.userEmail,
                     firstName: response.data.firstName,
                     lastName: response.data.lastName
@@ -73,7 +71,6 @@ const signUp = async (firstName: string, lastName: string, userEmail: string, _p
             } else {
                 console.log("Good response, but strange response code...?");
                 resolve({
-                    token: response.data.token,
                     userEmail: response.data.userEmail,
                     firstName: response.data.firstName,
                     lastName: response.data.lastName
@@ -119,7 +116,6 @@ const signIn = async (userEmail: string, _password: string): Promise<AuthData> =
             if (response.status == 200) {
                 // user account found and verified
                 resolve({
-                    token: response.data.token,
                     userEmail: response.data.userEmail,
                     firstName: response.data.firstName,
                     lastName: response.data.lastName
@@ -127,7 +123,6 @@ const signIn = async (userEmail: string, _password: string): Promise<AuthData> =
             } else {
                 console.log("Good response, but strange response code...?");
                 resolve({
-                    token: response.data.token,
                     userEmail: response.data.userEmail,
                     firstName: response.data.firstName,
                     lastName: response.data.lastName

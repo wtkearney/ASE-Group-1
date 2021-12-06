@@ -110,7 +110,8 @@ const styles = StyleSheet.create({
         height: 40,
       },
       headerStyle: {
-
+        fontFamily: 'Roboto-Bold',
+        color: colors.lightestColor,
       },
       textInput: {
         fontFamily: 'Roboto-Regular',
@@ -135,6 +136,29 @@ const styles = StyleSheet.create({
         paddingHorizontal: 40,
         alignItems: 'center',
         justifyContent: 'center',
+      },
+
+      flatListTitle: {
+        fontFamily: 'Roboto-Bold',
+        color: colors.lightestColor,
+        paddingVertical: 5,
+        paddingHorizontal: 20,
+        fontSize: 20,
+      },
+
+      flatListValue: {
+        fontFamily: 'Roboto-Regular',
+        color: colors.lightestColor,
+        paddingVertical: 5,
+        paddingHorizontal: 20,
+        fontSize: 15,
+      },
+
+      flatListView: {
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderBottomColor: colors.midColor,
+        borderBottomWidth: 1
       }
 });
 
