@@ -10,10 +10,12 @@ import {useAuth} from '../contexts/Auth';
 
 // import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Ionicons } from '@expo/vector-icons';
-import styles from "../../stylesheet";
+import {styles, colors} from "../../stylesheet";
 
 import {createStackNavigator} from '@react-navigation/stack'; // we need this in order to have a header
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { color } from 'react-native-elements/dist/helpers';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -23,20 +25,31 @@ const Tab = createBottomTabNavigator<RootStackParamList>();
 
 function TabNav() {
   // const navigation = useNavigation<homeScreenProp>();
-
   return (
-    <Tab.Navigator>
+    <Tab.Navigator screenOptions={{}}>
       <Tab.Screen name="Map" component={MapScreen} options={{
+        tabBarActiveBackgroundColor: colors.darkestColor,
+        tabBarInactiveBackgroundColor: colors.darkestColor,
+        tabBarActiveTintColor: colors.highlightColor,
+        tabBarInactiveTintColor: colors.midLightColor,
+        tabBarStyle: {borderTopColor: colors.midColor},
         headerShown: false,
         tabBarIcon: ({ color, size }) => (
             <Ionicons name="map" color={color} size={size} />
           )}}
       />
-      <Tab.Screen name="SavedLocations" component={SavedLocationsScreen} options={{
-        headerShown: false,
-        tabBarIcon: ({ color, size }) => (
-          <Ionicons name="location" color={color} size={size} />
-        ) }}
+      <Tab.Screen name="Saved Locations"
+        component={SavedLocationsScreen}
+        options={{
+          tabBarActiveBackgroundColor: colors.darkestColor,
+          tabBarInactiveBackgroundColor: colors.darkestColor,
+          tabBarActiveTintColor: colors.highlightColor,
+          tabBarInactiveTintColor: colors.midLightColor,
+          tabBarStyle: {borderTopColor: colors.midColor},
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="location" color={color} size={size} />
+          ) }}
       
       />
     </Tab.Navigator>
@@ -45,33 +58,40 @@ function TabNav() {
 
 function StackNav() {
 
-  const navigation = useNavigation();
+  // const navigation = useNavigation();
   const auth = useAuth();
 
   return (<Stack.Navigator screenOptions={{
-    headerTitle: ""
+    headerTitle: "",
+    headerStyle: {
+      
+    },
   }}>
     <Stack.Screen
       name="TabNav"
       component={TabNav}
       options={
         ({ navigation }) => ({
-        headerStyle: {backgroundColor: '#fff'},
+        headerStyle: {backgroundColor: colors.darkestColor,
+          shadowColor: colors.midColor, // this covers iOS
+          elevation: 0, // this covers Android
+        },
         headerLeft: () => (
           <TouchableOpacity
             style={styles.headerTouchableContainer}
             onPress={() => navigation.navigate('User Account')}>
-            <Ionicons name="person" size={25} color="black" style={{marginLeft: 15}} />
+            <Ionicons name="person" size={25} color={colors.midLightColor} style={{marginLeft: 15}} />
           </TouchableOpacity>
         ),
         headerRight: () => (
           <TouchableOpacity
-            style={styles.alreadyHaveAccountContainer}
+            style={{marginRight: 15}}
             onPress={() => auth.signOut()}>
-            <Text style={styles.alreadyHaveAccountText}>Sign out</Text>
+            <Text style={styles.signOutText}>Sign out</Text>
           </TouchableOpacity>
         ),
-      })}
+        })
+      }
     />
     <Stack.Screen
       name="User Account"
@@ -81,12 +101,16 @@ function StackNav() {
           headerShown: true,
           gestureEnabled: true,
          presentation: 'modal',
+         headerStyle: {backgroundColor: colors.darkestColor,
+          shadowColor: colors.midColor, // this covers iOS
+          elevation: 0, // this covers Android
+        },
          headerLeft: ()=> null,
          headerRight: () => (
            <TouchableOpacity
-             style={styles.alreadyHaveAccountContainer}
+             style={{}}
               onPress={() => navigation.navigate("TabNav")}>
-              <Ionicons name="close" size={25} color="black" style={{marginLeft: 15}} />
+              <Ionicons name="close" size={25} color={colors.midLightColor} style={{marginRight: 15}} />
             </TouchableOpacity>
           )
         })
