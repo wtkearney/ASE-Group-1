@@ -1,12 +1,23 @@
 import { StyleSheet } from "react-native";
 
+
+
+const colors = {
+  highlightColor: "#FBC740", // gold
+  lightestColor: "#f0ebd8",
+  midLightColor: "#748cab",
+  midColor: "#3e5c76",
+  midDarkColor: "#1d2d44",
+  darkestColor: "#0d1321"
+}
+
 const styles = StyleSheet.create({
 
     backgroundContainer: {
         flex: 1,
-        backgroundColor: '#F4EBD0',
-        alignItems: 'center',
-        justifyContent: 'center',
+        backgroundColor: colors.darkestColor,
+        // alignItems: 'center',
+        // justifyContent: 'center',
     },
 
     map: {
@@ -19,77 +30,99 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    textStyle: {
-        fontSize: 20
+
+    splashScreenTitle : {
+      color: colors.lightestColor,
+      fontSize: 20,
+      // paddingHorizontal: 40,
+      // paddingTop: 40,
+      // alignItems: 'center',
+      // justifyContent: 'center',
+    },
+    
+    title : {
+      fontFamily: 'Roboto-Bold',
+      color: colors.lightestColor,
+      fontSize: 20,
+      paddingHorizontal: 40,
+      paddingTop: 40,
+      // alignItems: 'center',
+      // justifyContent: 'center',
     },
     subtitle: {
-        color: "#122620",
-        fontSize: 15,
-        textAlign: 'left'
+      fontFamily: 'Roboto-Regular',
+      color: colors.midLightColor,
+      fontSize: 15,
+      paddingHorizontal: 40,
+      paddingVertical: 20
+      // textAlign: 'left'
+  },
+
+    headerTouchableContainer: {
+      paddingHorizontal: 5,
+      flexDirection: 'row',
     },
-    title : {
-        color: "#122620",
-        fontSize: 45,
-        alignItems: 'center',
-        justifyContent: 'center',
-        // marginTop: -400
+
+    signOutText: {
+      fontFamily: 'Roboto-Bold',
+      fontSize: 15,
+      color: colors.midLightColor,
+      flexShrink: 1
     },
-    status : {
-        fontSize: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
+
+    headerQuietText: {
+      fontFamily: 'Roboto-Regular',
+      fontSize: 15,
+      color: colors.lightestColor,
+      flexShrink: 1
     },
+
+    headerLoudText: {
+      fontFamily: 'Roboto-Regular',
+      fontSize: 15,
+      color: colors.highlightColor
+    },
+
     appButtonContainer: {
         elevation: 8,
-        backgroundColor: "#122620",
+        backgroundColor: colors.midDarkColor,
         borderRadius: 40,
         paddingVertical: 15,
         paddingHorizontal: 20,
+        marginHorizontal: 40
       },
+
     appButtonText: {
+      fontFamily: 'Roboto-Bold',
         fontSize: 18,
-        color: "#F4EBD0",
+        color: colors.lightestColor,
         fontWeight: "bold",
         alignSelf: "center",
-        textTransform: "uppercase"
+        // textTransform: "uppercase"
     },
-
-    alreadyHaveAccountContainer: {
-        elevation: 8,
-        // backgroundColor: "#F4EBD0",
-        borderRadius: 20,
-        paddingVertical: 15,
-        paddingHorizontal: 20,
-      },
-    
-      alreadyHaveAccountText: {
-        fontSize: 15,
-        elevation: 8,
-        borderRadius: 20,
-        paddingVertical: 15,
-        paddingHorizontal: 20,
-      },
-
-      alreadyHaveAccountHighlightText: {
-        elevation: 8,
-        borderRadius: 20,
-        paddingVertical: 15,
-        paddingHorizontal: 20,
-      },
-
 
     space: {
         width: 40,
         height: 40,
       },
-      input: {
+      headerStyle: {
+
+      },
+      textInput: {
+        fontFamily: 'Roboto-Regular',
+        color: colors.lightestColor,
+        borderLeftWidth: 2,
+        borderTopWidth: 2,
+        borderRightWidth: 2,
+        borderBottomWidth: 2,
         borderRadius: 10,
-        height: 40,
-        width: 200,
-        margin: 12,
+        borderColor: "#4a4e69", // misty blue
+        height: 50,
+        marginHorizontal: 40,
+        marginVertical: 10,
         borderWidth: 1,
-        padding: 10,
+        padding: 10
       }
 });
 
-export default styles;
+export {styles, colors};
