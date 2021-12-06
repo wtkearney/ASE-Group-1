@@ -1,7 +1,7 @@
 
 
 export type RootStackParamList = {
-    SavedLocations: undefined;
+    "Saved Locations": undefined;
     TabNav: undefined;
     "User Account": undefined;
     SignUp: undefined;

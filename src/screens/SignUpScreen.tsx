@@ -3,15 +3,11 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {ActivityIndicator, TouchableOpacity, Text, View, TextInput, Keyboard, TouchableWithoutFeedback, KeyboardAvoidingView} from 'react-native';
 import {RootStackParamList} from './RootStackParams';
-import styles from "../../stylesheet";
+import {styles, colors} from "../../stylesheet";
 import {useAuth} from '../contexts/Auth';
 import { AxiosError } from 'axios';
 
-type signUpScreenProp = StackNavigationProp<RootStackParamList, 'SignUp'>;
-
 const SignUpScreen = () => {
-
-    const navigation = useNavigation<signUpScreenProp>();
 
     function emailIsValid (email: string) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
@@ -58,35 +54,30 @@ const SignUpScreen = () => {
             <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                 <View style={styles.backgroundContainer}>
 
-                    <TouchableOpacity
-                        style={styles.alreadyHaveAccountContainer}
-                        onPress={() => navigation.navigate("SignIn")}
-                    >
-                        <Text style={styles.alreadyHaveAccountText}>Already have an account? Log In</Text>
-                    </TouchableOpacity>
-
-                    <Text style={styles.title}>Welcome to Geolocation</Text>
-                    <Text style={styles.subtitle}>Create an account to access geolocation features.</Text>
+                    <Text style={styles.title}>Sign up</Text>
+                    <Text style={styles.subtitle}>Create an account to access app features.</Text>
                     <TextInput
-                        style={styles.input}
+                        style={styles.textInput}
                         onChangeText={onChangeFirstName}
                         value={firstName}
                         placeholder="First name"
                         clearButtonMode='while-editing'
                         keyboardType="default"
                         textContentType='givenName'
+                        placeholderTextColor={colors.midLightColor}
                     />
                     <TextInput
-                        style={styles.input}
+                        style={styles.textInput}
                         onChangeText={onChangeLastName}
                         value={lastName}
                         placeholder="Last name"
                         clearButtonMode='while-editing'
                         keyboardType="default"
                         textContentType='givenName'
+                        placeholderTextColor={colors.midLightColor}
                     />
                     <TextInput
-                        style={styles.input}
+                        style={styles.textInput}
                         onChangeText={onChangeEmail}
                         value={email}
                         placeholder="Email"
@@ -94,9 +85,10 @@ const SignUpScreen = () => {
                         keyboardType="email-address"
                         textContentType='username'
                         autoCapitalize='none'
+                        placeholderTextColor={colors.midLightColor}
                     />
                     <TextInput
-                        style={styles.input}
+                        style={styles.textInput}
                         onChangeText={onChangePassword}
                         value={password}
                         placeholder="Password"
@@ -104,9 +96,10 @@ const SignUpScreen = () => {
                         clearButtonMode='while-editing'
                         secureTextEntry={true}
                         textContentType='password'
+                        placeholderTextColor={colors.midLightColor}
                     />
                     <TextInput
-                        style={styles.input}
+                        style={styles.textInput}
                         onChangeText={onChangePasswordConfirm}
                         value={passwordConfirm}
                         placeholder="Confirm Password"
@@ -114,6 +107,7 @@ const SignUpScreen = () => {
                         clearButtonMode='while-editing'
                         secureTextEntry={true}
                         textContentType='password'
+                        placeholderTextColor={colors.midLightColor}
                     />
                     <View style={styles.space}/>
                     {loading ? (

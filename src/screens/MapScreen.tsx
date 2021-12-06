@@ -3,7 +3,7 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import { Text, View, TouchableOpacity } from "react-native";
 import {RootStackParamList} from './RootStackParams';
-import styles from "../../stylesheet";
+import {styles, colors} from "../../stylesheet";
 
 import {ExportMap} from "../components/ExportMap";
 

@@ -4,7 +4,7 @@ import {ActivityIndicator, TouchableOpacity, Text, View, TextInput, Keyboard, To
 // import {useNavigation} from '@react-navigation/native';
 // import {StackNavigationProp} from '@react-navigation/stack';
 
-import styles from "../../stylesheet";
+import {styles, colors} from "../../stylesheet";
 import {useAuth} from '../contexts/Auth';
 
 //type signInScreenProp = StackNavigationProp<RootStackParamList, 'SignIn'>;
@@ -30,9 +30,11 @@ const SignInScreen = () => {
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
             <View style={styles.backgroundContainer}>
-                <Text style={styles.title}>Sign In Screen</Text>
+                <Text style={styles.title}>Log in</Text>
+                <Text style={styles.subtitle}>Enter your email and password below.</Text>
+
                 <TextInput
-                    style={styles.input}
+                    style={styles.textInput}
                     onChangeText={onChangeEmail}
                     value={email}
                     placeholder="Email"
@@ -40,9 +42,10 @@ const SignInScreen = () => {
                     keyboardType="email-address"
                     textContentType='username'
                     autoCapitalize='none'
+                    placeholderTextColor={colors.midLightColor}
                 />
                 <TextInput
-                    style={styles.input}
+                    style={styles.textInput}
                     onChangeText={onChangePassword}
                     value={password}
                     placeholder="Password"
@@ -50,7 +53,9 @@ const SignInScreen = () => {
                     clearButtonMode='while-editing'
                     secureTextEntry={true}
                     textContentType='password'
+                    placeholderTextColor={colors.midLightColor}
                 />
+
                 <View style={styles.space}/>
                 {loading ? (
                     <ActivityIndicator color={'#000'} animating={true} size="small" />
@@ -59,7 +64,7 @@ const SignInScreen = () => {
                         style={styles.appButtonContainer}
                         onPress={() => signIn(email, password)}
                     >
-                        <Text style={styles.appButtonText}>Sign In</Text>
+                        <Text style={styles.appButtonText}>Log in</Text>
                     </TouchableOpacity>
                 )}
             </View>
