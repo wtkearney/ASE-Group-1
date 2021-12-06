@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
       copyrightNotice : {
         color: colors.midColor,
         textAlign: "center",
-        fontSize: 7,
+        fontSize: 12,
         paddingHorizontal: 40,
         alignItems: 'center',
         justifyContent: 'center',

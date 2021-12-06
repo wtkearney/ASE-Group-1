@@ -50,6 +50,9 @@ const SplashScreen = () => {
         {/* <Text style={styles.splashScreenTitle}>Welcome!</Text> */}
       </Animated.View>
       <Loading/>
+      <View style={styles.space}/>
+      <View style={styles.space}/>
+        <Text style={styles.copyrightNotice}>Contains HM Land Registry data{"\n"}© Crown copyright and database right 2021.{"\n"}This data is licensed under the Open Government Licence v3.0.</Text>
 
     </View>
 
