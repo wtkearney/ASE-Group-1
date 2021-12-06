@@ -7,6 +7,8 @@ import {RootStackParamList} from '../screens/RootStackParams';
 import { TouchableOpacity, Text } from "react-native";
 import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../contexts/Auth';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 
 // import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,8 +16,6 @@ import {styles, colors} from "../../stylesheet";
 
 import {createStackNavigator} from '@react-navigation/stack'; // we need this in order to have a header
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
-import { color } from 'react-native-elements/dist/helpers';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -26,31 +26,26 @@ const Tab = createBottomTabNavigator<RootStackParamList>();
 function TabNav() {
   // const navigation = useNavigation<homeScreenProp>();
   return (
-    <Tab.Navigator screenOptions={{}}>
+    
+    <Tab.Navigator screenOptions={{
+      tabBarActiveBackgroundColor: colors.darkestColor,
+      tabBarInactiveBackgroundColor: colors.darkestColor,
+      tabBarActiveTintColor: colors.highlightColor,
+      tabBarInactiveTintColor: colors.midLightColor,
+      tabBarStyle: {borderTopColor: colors.midColor, backgroundColor: colors.darkestColor},
+    }}>
       <Tab.Screen name="Map" component={MapScreen} options={{
-        tabBarActiveBackgroundColor: colors.darkestColor,
-        tabBarInactiveBackgroundColor: colors.darkestColor,
-        tabBarActiveTintColor: colors.highlightColor,
-        tabBarInactiveTintColor: colors.midLightColor,
-        tabBarStyle: {borderTopColor: colors.midColor},
         headerShown: false,
         tabBarIcon: ({ color, size }) => (
             <Ionicons name="map" color={color} size={size} />
           )}}
       />
-      <Tab.Screen name="Saved Locations"
-        component={SavedLocationsScreen}
+      <Tab.Screen name="Saved Locations" component={SavedLocationsScreen}
         options={{
-          tabBarActiveBackgroundColor: colors.darkestColor,
-          tabBarInactiveBackgroundColor: colors.darkestColor,
-          tabBarActiveTintColor: colors.highlightColor,
-          tabBarInactiveTintColor: colors.midLightColor,
-          tabBarStyle: {borderTopColor: colors.midColor},
           headerShown: false,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="location" color={color} size={size} />
           ) }}
-      
       />
     </Tab.Navigator>
   );
@@ -61,10 +56,12 @@ function StackNav() {
   // const navigation = useNavigation();
   const auth = useAuth();
 
-  return (<Stack.Navigator screenOptions={{
+  return (
+    <SafeAreaView style={{ flex: 1 }} edges={['left', 'right']}>
+      <StatusBar style="light" />
+  <Stack.Navigator screenOptions={{
     headerTitle: "",
     headerStyle: {
-      
     },
   }}>
     <Stack.Screen
@@ -117,6 +114,7 @@ function StackNav() {
       }
     />
   </Stack.Navigator>
+  </SafeAreaView>
 
   )}
 
