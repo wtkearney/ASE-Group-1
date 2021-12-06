@@ -126,6 +126,15 @@ const styles = StyleSheet.create({
         marginVertical: 10,
         borderWidth: 1,
         padding: 10
+      },
+    
+      copyrightNotice : {
+        color: colors.midColor,
+        textAlign: "center",
+        fontSize: 7,
+        paddingHorizontal: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
       }
 });
 
