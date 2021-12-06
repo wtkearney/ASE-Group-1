@@ -58,7 +58,7 @@ const SignInScreen = () => {
 
                 <View style={styles.space}/>
                 {loading ? (
-                    <ActivityIndicator color={'#000'} animating={true} size="small" />
+                    <ActivityIndicator color={colors.midLightColor} animating={true} size="small" />
                 ) : (
                     <TouchableOpacity
                         style={styles.appButtonContainer}
