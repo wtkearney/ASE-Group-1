@@ -20,6 +20,10 @@ const styles = StyleSheet.create({
         // justifyContent: 'center',
     },
 
+    fadingContainer: {
+      backgroundColor: colors.darkestColor,
+    },
+
     map: {
       ...StyleSheet.absoluteFillObject,
     },
