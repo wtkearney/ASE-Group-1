@@ -10,12 +10,14 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@expo-google-fonts/inter": "^0.2.0",
     "@react-native-async-storage/async-storage": "~1.15.0",
     "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/core": "^6.1.0",
     "@react-navigation/stack": "^6.0.11",
     "axios": "^0.24.0",
     "expo": "~43.0.2",
+    "expo-font": "~10.0.3",
     "expo-location": "~13.0.4",
     "expo-secure-store": "~11.0.3",
     "expo-status-bar": "~1.1.0",
@@ -32,8 +34,7 @@
     "react-native-web": "0.17.1",
     "react-navigation": "^4.4.4",
     "react-navigation-stack": "^2.10.4",
-    "url": "^0.11.0",
-    "undefined": "react-native-vector-icons/MaterialCommunityIcons"
+    "url": "^0.11.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
