@@ -1,9 +1,12 @@
 import React, {createContext, useState, useContext, useEffect} from 'react';
-import { resolve } from 'url';
 // import * as SecureStore from 'expo-secure-store';
 import * as Location from 'expo-location';
 
 import {AuthData, PostcodeData, authService} from '../services/authService';
+
+import * as Font from 'expo-font';
+import { isLoaded } from 'expo-font';
+
 
 export type locationData = {
   lat: number;
@@ -30,6 +33,8 @@ const AuthProvider: React.FC = ({children}) => {
 
   const [locationData, setLocationData] = useState<locationData>();
 
+  // const [fontLoaded, setFontLoaded] = useState<boolean>(false);
+
   const [nearestPostcodes, setNearestPostcodes] = useState<PostcodeData>();
 
   // AuthContext starts with loading = true and stays like that until the data is loaded from storage
@@ -47,8 +52,28 @@ const AuthProvider: React.FC = ({children}) => {
 
   const startUp = async () => {
     console.log("Starting up app....");
-    setLoading(false);
+
+    // load fonts
+    await loadFonts();
+
+    // get user location
     await getLatLong();
+
+
+    if (isLoaded('Roboto-Regular')) {
+      setLoading(false)
+    }
+  }
+
+  const loadFonts = async () => {
+    await Font.loadAsync({
+      // Load a font `Montserrat` from a static resource
+      'Roboto-Regular': require('../../assets/fonts/Roboto/Roboto-Regular.ttf'),
+
+      // Any string can be used as the fontFamily name
+      'Roboto-Bold': require('../../assets/fonts/Roboto/Roboto-Bold.ttf')
+    });
+    // setFontLoaded(true);
   }
 
   const getLatLong = async () => {
