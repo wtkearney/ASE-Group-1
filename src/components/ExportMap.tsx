@@ -2,7 +2,7 @@ import React from 'react';
 // import {View, ActivityIndicator} from 'react-native';
 import  MapView ,{ Marker } from 'react-native-maps';
 import {useAuth} from '../contexts/Auth';
-import styles from "../../stylesheet";
+import {styles, colors} from "../../stylesheet";
 
 import {Loading} from '../components/Loading';
 
