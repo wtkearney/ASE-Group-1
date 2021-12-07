@@ -2,15 +2,15 @@ import React, {createContext, useState, useContext, useEffect} from 'react';
 // import * as SecureStore from 'expo-secure-store';
 import * as Location from 'expo-location';
 
-import {AuthData, PostcodeData, authService} from '../services/authService';
+import {AuthData, PostcodeData, heatmapData, authService} from '../services/authService';
 
 import * as Font from 'expo-font';
 import { isLoaded } from 'expo-font';
 
-
 export type locationData = {
   lat: number;
   long: number;
+  postcode: string;
 }
 
 type AuthContextData = {
@@ -18,11 +18,13 @@ type AuthContextData = {
   loading: boolean;
   locationData?: locationData;
   nearestPostcodes?: PostcodeData;
+  heatmapData?: Array<heatmapData>;
   signUp(firstName: string, lastName: string, email: string, password: string): Promise<void>;
   signIn(email: string, password: string): Promise<void>;
   signOut(): void;
   getLatLong(): void;
-  getNearestPostcodes(): void;
+  getHeatmapData(): void;
+  // getNearestPostcodes(): void;
 };
 
 // Create the Auth Context with the data type specified and an empty object
@@ -32,6 +34,8 @@ const AuthProvider: React.FC = ({children}) => {
   const [authData, setAuthData] = useState<AuthData>();
 
   const [locationData, setLocationData] = useState<locationData>();
+
+  const [heatmapData, setHeatmapData] = useState<Array<heatmapData>>();
 
   // const [fontLoaded, setFontLoaded] = useState<boolean>(false);
 
@@ -47,7 +51,8 @@ const AuthProvider: React.FC = ({children}) => {
 
   // everytime locationData is updated, get new neary postcodes
   useEffect(() => {
-    getNearestPostcodes();
+    // getNearestPostcodes();
+    getHeatmapData();
   }, [locationData])
 
   const startUp = async () => {
@@ -81,27 +86,50 @@ const AuthProvider: React.FC = ({children}) => {
     let {status} = await Location.requestForegroundPermissionsAsync();
     let location = await Location.getCurrentPositionAsync({});
 
-    if (location) {
-      const locationData = {
-        lat: location.coords.latitude,
-        long: location.coords.longitude};
+    // console.log(location);
 
-      console.log(locationData);
-      setLocationData(locationData);
+    if (location) {
+
+      let postcode = await authService.getNearestPostcodes(location.coords.latitude, location.coords.longitude, 1);
+
+      // console.log(postcode)
+
+      if (postcode) {
+
+        const locationData = {
+          lat: location.coords.latitude,
+          long: location.coords.longitude,
+          postcode: postcode
+        };
+  
+        // console.log(locationData);
+        setLocationData(locationData);
+      }
     }
   }
 
-  // function to get our location
-  const getNearestPostcodes = async () => {
+  const getHeatmapData = async () => {
     
     if (locationData) {
-      let postcodeData = await authService.getNearestPostcodes(locationData.lat, locationData.long);
+      let heatmapData = await authService.getHeatmapData(locationData.postcode);
 
-      setNearestPostcodes(postcodeData);
-      console.log(postcodeData);
+      setHeatmapData(heatmapData);
+      // console.log("This is the heatmap data.")
+      // console.log(heatmapData);
     }
-
   };
+
+  // // function to get our location
+  // const getNearestPostcodes = async () => {
+    
+  //   if (locationData) {
+  //     let postcodeData = await authService.getNearestPostcodes(locationData.lat, locationData.long);
+
+  //     setNearestPostcodes(postcodeData);
+  //     console.log(postcodeData);
+  //   }
+
+  // };
 
   const signUp = async (firstName: string, lastName: string, email: string, _password: string): Promise<void> => {
     return new Promise((resolve, reject) => {
@@ -148,8 +176,8 @@ const AuthProvider: React.FC = ({children}) => {
   return (
     // This component will be used to encapsulate the whole App, so all components will have access to the Context
     <AuthContext.Provider value={{
-      authData, loading, locationData, nearestPostcodes,
-      signUp, signIn, signOut, getLatLong, getNearestPostcodes}}>
+      authData, loading, locationData, nearestPostcodes, heatmapData,
+      signUp, signIn, signOut, getLatLong, getHeatmapData}}>
       {children}
     </AuthContext.Provider>
   );

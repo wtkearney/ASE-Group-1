@@ -18,6 +18,20 @@ const headers = {
     }
 };
 
+export type priceData = {
+    year: string;
+    price: number;
+    address: string;
+}
+
+export type heatmapData = {
+    areaCode: string;
+    average: number;
+    latitude: number;
+    longitude: number;
+    data: Array<priceData>;
+  }
+
 export type AuthData = {
     userEmail: string;
     firstName: string;
@@ -28,15 +42,60 @@ export type PostcodeData = {
     nearestPostcodes: Array<string>;
 }
 
-const getNearestPostcodes = async (lat: number, long: number): Promise<PostcodeData> => {
+const getHeatmapData = async (postcode: string): Promise<heatmapData[]> => {
+
+    // const fakeData = [
+    //     {"areaCode":"BN3 2AF",
+    //     "average":266000,
+    //     "longitude":-0.171792,
+    //     "latitude":50.828036,
+    //     "data":[{"year":"1998", "price":80000, "address":"119,  CHURCH ROAD,  HOVE,  BRIGHTON AND HOVE"},
+    //         {"year":"2002", "price":218000, "address":"121,  CHURCH ROAD,  HOVE,  BRIGHTON AND HOVE"},
+    //         {"year":"2015", "price":500000, "address":"123,  CHURCH ROAD,  HOVE,  BRIGHTON AND HOVE"}]}, 
+    //     {"areaCode":"BN3 2AN",
+    //     "average":0,
+    //     "longitude":-0.172171,
+    //     "latitude":50.828141,
+    //     "data":[]}
+    // ]
+
+    // embed the whole function body inside a Promise constructor, so should any error happen, it will be converted to a rejection
+    return new Promise((resolve, reject) => {
+        axios.get(serverURL + apiPath + `/mapview/${postcode}`)
+        .then((response) => {
+              //console.log(response);
+            // check response status
+            if (response.status == 200 || response.status == 304) {
+                resolve(response.data);
+            } else {
+                reject(new Error("Response status code " + response.status ));
+            }
+        })
+        .catch(err => {
+            //console.log(err);
+            if (err.response) {
+                reject(new Error("Error " + err.response.status ));
+            } else if (err.request) {
+                // client never received a response, or request never left
+                reject(new Error("Client never received a response, or request never left."));
+            } else {
+                // anything else
+                reject(new Error());
+            }
+        })
+    })
+}
+
+const getNearestPostcodes = async (lat: number, long: number, limit: number): Promise<string> => {
 
     return new Promise((resolve, reject) => {
         
-        axios.get(serverURL + postcodesPath + `/getNearestPostcodes?long=${long}&lat=${lat}`)
+        axios.get(serverURL + postcodesPath + `/getNearestPostcodes?long=${long}&lat=${lat}&limit=${limit}`)
         .then((response) => {
-            resolve({
-                nearestPostcodes: response.data,
-            });
+            // console.log(response.data)
+            resolve(
+                response.data[0]
+            );
         })
         .catch(err => {
             reject(new Error("This is the error you are looking for!"));
@@ -160,5 +219,6 @@ const signIn = async (userEmail: string, _password: string): Promise<AuthData> =
 export const authService = {
     signIn,
     signUp,
-    getNearestPostcodes
+    getNearestPostcodes,
+    getHeatmapData
 };
