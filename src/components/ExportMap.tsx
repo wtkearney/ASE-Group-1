@@ -50,11 +50,11 @@ export const ExportMap = () => {
     console.log(weightedLatLngArray);
   }
 
-  const gradientObject = {
-    colors: ["red", "yellow", "green"],
-    startPoints: [0.0, 0.5, 1.0],
-    colorMapSize: 256
-  }
+  // const gradientObject = {
+  //   colors: ["red", "yellow", "green"],
+  //   startPoints: [0.0, 0.5, 1.0],
+  //   colorMapSize: 256
+  // }
 
   if (weightedLatLngArray && auth.heatmapData && auth.locationData) {
     console.log("Trying to return mapview");
@@ -72,7 +72,7 @@ export const ExportMap = () => {
           points={weightedLatLngArray}
           radius={20}
           opacity={0.7}
-          gradient={gradientObject}
+          // gradient={gradientObject} // use default
         />
   
       <Marker pinColor='#30D5C8'
