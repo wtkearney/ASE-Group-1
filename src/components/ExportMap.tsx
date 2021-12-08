@@ -36,12 +36,25 @@ export const ExportMap = () => {
     longitudeDelta: longitudeDelta,
   });
 
-  const [lastPressCoordinates, setLastPressCoordinates] = useState<LatLng>({
+  const [markerCoordinates, setMarkerCoordinates] = useState({
     latitude: auth.viewLocationData.lat,
     longitude: auth.viewLocationData.long
   });
 
-  const markerRef = useRef(null);
+
+  // when the marker coordinates change, update the view location
+  // this will also update the heatmap data
+  useEffect(() => {
+    if (markerCoordinates) {
+      auth.setViewLocationDataWrapper(markerCoordinates.latitude, markerCoordinates.longitude);
+      updateWeightedArray();
+    }
+  }, [markerCoordinates])
+
+  // when the heatmap data updates, update the weighted array used for the heatmap
+  useEffect(() => {
+    updateWeightedArray();
+  }, [auth.heatmapData])
 
   useEffect(() => {
     // setLastPressCoordinates({latitude: auth.viewLocationData.lat,
@@ -55,11 +68,6 @@ export const ExportMap = () => {
       })
 
   }, [auth.viewLocationData])
-
-  // everytime heatmap data is updated, update the weighted array for use in the heatmap
-  useEffect(() => {
-    updateWeightedArray();
-  }, [auth.heatmapData])
 
   const confirmSaveLocation = () => {
     Alert.alert(
@@ -81,8 +89,8 @@ export const ExportMap = () => {
 
     console.log("Saving Location!")
 
-    if (lastPressCoordinates) {
-      auth.saveLocation(lastPressCoordinates.latitude, lastPressCoordinates.longitude);
+    if (auth.viewLocationData) {
+      auth.saveLocation(auth.viewLocationData.lat, auth.viewLocationData.long);
     }
 
     navigation.navigate("Saved Locations");
@@ -123,9 +131,9 @@ export const ExportMap = () => {
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.map}
-        //minZoomLevel={0}
-        //maxZoomLevel={5}
-        onPress={ (event) => setLastPressCoordinates(event.nativeEvent.coordinate)}
+        minZoomLevel={10}
+        maxZoomLevel={16}
+        onPress={ (event) => setMarkerCoordinates(event.nativeEvent.coordinate)}
         initialRegion={{ latitude: auth.userLocationData.lat,
           longitude: auth.userLocationData.long,
           latitudeDelta: latitudeDelta,
@@ -133,6 +141,8 @@ export const ExportMap = () => {
           //onRegionChangeComplete runs when the user stops dragging MapView
         region={region}
         onRegionChangeComplete={(region) => {
+          setLatitudeDelta(region.latitudeDelta);
+          setLongitudeDelta(region.longitudeDelta);
           setRegion(region);
           // console.log(region.latitude, region.longitude);
           // if (markerRef && markerRef.current && markerRef.current.showCallout) {
@@ -142,35 +152,34 @@ export const ExportMap = () => {
       >
         <Heatmap
           points={weightedLatLngArray}
-          radius={100}
+          radius={50}
           opacity={0.7}
           // gradient={gradientObject} // use default
         />
       
-      {lastPressCoordinates &&
+      {markerCoordinates &&
       <Marker 
         //description={{}}
-        coordinate={lastPressCoordinates}
+        coordinate={markerCoordinates}
         // onPress={() => console.log("You pressed me!")}
         //onCalloutPress={() => console.log("You pressed me!")}
-        ref={markerRef}
       >
         <Callout
           onPress={confirmSaveLocation}
           style={{}}>
             <View>
               <Text style={styles.calloutTitle}>Click me to save this location</Text>
-              <Text style={styles.calloutDescription}>Lat: {lastPressCoordinates.latitude.toFixed(3)}, Long: {lastPressCoordinates.longitude.toFixed(3)}</Text>
+              <Text style={styles.calloutDescription}>Lat: {markerCoordinates.latitude.toFixed(3)}, Long: {markerCoordinates.longitude.toFixed(3)}</Text>
             </View>
         </Callout>
       </Marker>
       }
       
   
-      <Marker pinColor={colors.lightestColor}
+      {/* <Marker pinColor={colors.lightestColor}
         title="Current Location"
         description={"Lat: " + auth.viewLocationData.lat.toFixed(4) + ", Long: " + auth.viewLocationData.long.toFixed(4)}
-        coordinate={{ latitude: auth.viewLocationData.lat, longitude: auth.viewLocationData.long }}/>
+        coordinate={{ latitude: auth.viewLocationData.lat, longitude: auth.viewLocationData.long }}/> */}
     </MapView>
   
     );

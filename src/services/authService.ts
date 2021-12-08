@@ -19,8 +19,8 @@ const headers = {
 };
 
 export type savedLocationData = {
-    latitude: number;
-    longitude: number;
+    lat: number;
+    long: number;
     creationDate: Date;
   }
 
@@ -143,7 +143,7 @@ const getHeatmapData = async (postcode: string): Promise<heatmapData[]> => {
 
     // embed the whole function body inside a Promise constructor, so should any error happen, it will be converted to a rejection
     return new Promise((resolve, reject) => {
-        axios.get(serverURL + apiPath + `/mapview/${postcode}`)
+        axios.get(serverURL + apiPath + `/mapview/unit/district/${postcode}`)
         .then((response) => {
               //console.log(response);
             // check response status

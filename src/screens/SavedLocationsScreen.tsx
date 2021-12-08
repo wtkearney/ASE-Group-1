@@ -72,7 +72,7 @@ const SavedLocationsScreen = () => {
       // renderItem={renderItem}
       renderItem={({ item }) => (
           <View style={styles.flatListView}>
-              <TouchableOpacity onPress={() => loadSavedLocation(item.latitude, item.longitude)} style={{}}>
+              <TouchableOpacity onPress={() => loadSavedLocation(item.lat, item.long)} style={{}}>
               <Text style={styles.flatListTitle}>{item.creationDate.toLocaleDateString(
                     'en-gb', {
                       year: 'numeric',
@@ -82,8 +82,8 @@ const SavedLocationsScreen = () => {
                   </Text>
                   {/* <Text style={styles.flatListTitle}>{item.creationDate}
                   </Text> */}
-                  <Text style={styles.flatListValue}>Latitude: {item.latitude}</Text>
-                  <Text style={styles.flatListValue}>Longitude: {item.longitude}</Text>
+                  <Text style={styles.flatListValue}>Latitude: {item.lat}</Text>
+                  <Text style={styles.flatListValue}>Longitude: {item.long}</Text>
               </TouchableOpacity>
               </View>
           )}

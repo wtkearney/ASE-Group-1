@@ -200,6 +200,8 @@ const AuthProvider: React.FC = ({children}) => {
   }
 
   const getHeatmapData = async () => {
+
+    console.log("Updating heatmap data")
     
     if (viewLocationData && viewLocationData.postcode) {
       // var outerCode = userLocationData.postcode.replace(/[" "].*/, '').toUpperCase();
