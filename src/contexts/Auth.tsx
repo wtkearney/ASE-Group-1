@@ -2,7 +2,7 @@ import React, {createContext, useState, useContext, useEffect, Dispatch, SetStat
 // import * as SecureStore from 'expo-secure-store';
 import * as Location from 'expo-location';
 
-import {AuthData, PostcodeData, heatmapData, authService} from '../services/authService';
+import {AuthData, PostcodeData, heatmapData, authService, savedLocationData} from '../services/authService';
 
 import * as Font from 'expo-font';
 import { isLoaded } from 'expo-font';
@@ -13,11 +13,7 @@ export type locationData = {
   postcode: string;
 }
 
-export type savedLocationData = {
-  lat: number;
-  long: number;
-  creationDate: Date;
-}
+
 
 type AuthContextData = {
   authData?: AuthData;
@@ -87,6 +83,11 @@ const AuthProvider: React.FC = ({children}) => {
     
   }, [userLocationData])
 
+  // update the saved locations whenever the auth data is updated, because we need the user's email
+  useEffect(() => {
+    loadSavedLocationData();
+  }, [authData])
+
   const startUp = async () => {
     console.log("Starting up app....");
 
@@ -100,7 +101,7 @@ const AuthProvider: React.FC = ({children}) => {
       setViewLocationData(userLocationData);
     }
 
-    await loadSavedLocationData();
+    
 
     if (isLoaded('Roboto-Regular')) {
       setLoading(false)
@@ -133,17 +134,18 @@ const AuthProvider: React.FC = ({children}) => {
   };
 
   const loadSavedLocationData = async () => {
-  
-    const fakeData = [
-      {lat: 50.828748334140904,
-      long: -0.15194431802911557,
-      creationDate: new Date("2021-12-08T08:00:30.000+00:00")},
-      {lat: 50.82829917805563,
-      long: -0.17806380987167358,
-      creationDate: new Date("2021-12-08T09:30:30.000+00:00")}
-    ]
 
-    setSavedLocations(fakeData);
+    if (authData) {
+      let data = await authService.getSavedLocationData(authData?.userEmail);
+
+      for(var i = 0; i < data.length; i++) {
+        data[i].creationDate = new Date(data[i].creationDate)
+      }
+
+      console.log(data);
+      setSavedLocations(data);
+    }
+    
   }
 
   const loadFonts = async () => {

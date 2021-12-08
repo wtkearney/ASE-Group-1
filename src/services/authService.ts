@@ -19,9 +19,10 @@ const headers = {
 };
 
 export type savedLocationData = {
-    latitude: number;
-    longitude: number;
-}
+    lat: number;
+    long: number;
+    creationDate: Date;
+  }
 
 export type priceData = {
     year: string;
@@ -103,6 +104,35 @@ const deleteAccount = async (userEmail: string): Promise<boolean> => {
         })
     })
   }
+
+
+const getSavedLocationData = async (userEmail: string): Promise<savedLocationData[]> => {
+
+    return new Promise((resolve, reject) => {
+        axios.get(serverURL + usersPath + `/userLocations/${userEmail}`)
+        .then((response) => {
+              //console.log(response);
+            // check response status
+            if (response.status == 200) {
+                resolve(response.data);
+            } else {
+                reject(new Error("Response status code " + response.status ));
+            }
+        })
+        .catch(err => {
+            //console.log(err);
+            if (err.response) {
+                reject(new Error("Error " + err.response.status ));
+            } else if (err.request) {
+                // client never received a response, or request never left
+                reject(new Error("Client never received a response, or request never left."));
+            } else {
+                // anything else
+                reject(new Error());
+            }
+        })
+    })
+}
 
 const getHeatmapData = async (postcode: string): Promise<heatmapData[]> => {
 
@@ -313,5 +343,6 @@ export const authService = {
     getHeatmapData,
     getOuterHeatmapData,
     saveLocation,
-    deleteAccount
+    deleteAccount,
+    getSavedLocationData
 };

@@ -4,7 +4,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import { Text, View, TouchableOpacity, FlatList } from "react-native";
 import {RootStackParamList} from './RootStackParams';
 import {styles, colors} from "../../stylesheet";
-import {useAuth, savedLocationData} from '../contexts/Auth';
+import {useAuth} from '../contexts/Auth';
 import {Loading} from '../components/Loading';
 
 type homeScreenProp = StackNavigationProp<RootStackParamList, 'Saved Locations'>;
@@ -32,13 +32,15 @@ const SavedLocationsScreen = () => {
           renderItem={({ item }) => (
               <View style={styles.flatListView}>
                   <TouchableOpacity onPress={() => loadSavedLocation(item.lat, item.long)} style={{}}>
-                      <Text style={styles.flatListTitle}>{item.creationDate.toLocaleDateString(
+                  <Text style={styles.flatListTitle}>{item.creationDate.toLocaleDateString(
                         'en-gb', {
                           year: 'numeric',
                           month: 'long',
                           day: 'numeric'}) } at {item.creationDate.toLocaleTimeString(
                             'en-gb', { hour: '2-digit', minute: '2-digit' }) }
                       </Text>
+                      {/* <Text style={styles.flatListTitle}>{item.creationDate}
+                      </Text> */}
                       <Text style={styles.flatListValue}>Latitude: {item.lat}</Text>
                       <Text style={styles.flatListValue}>Longitude: {item.long}</Text>
                   </TouchableOpacity>
