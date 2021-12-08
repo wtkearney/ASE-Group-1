@@ -28,6 +28,14 @@ export const ExportMap = () => {
   const [latitudeDelta, setLatitudeDelta] = useState<number>(0.005);
   const [longitudeDelta, setLongitudeDelta] = useState<number>(0.005);
 
+  //create a Hook to store our region data.
+  const [region, setRegion] = useState({
+    latitude: 51.5079145,
+    longitude: -0.0899163,
+    latitudeDelta: latitudeDelta,
+    longitudeDelta: longitudeDelta,
+  });
+
   const [lastPressCoordinates, setLastPressCoordinates] = useState<LatLng>({
     latitude: auth.viewLocationData.lat,
     longitude: auth.viewLocationData.long
@@ -36,23 +44,24 @@ export const ExportMap = () => {
   const markerRef = useRef(null);
 
   useEffect(() => {
-    // getNearestPostcodes();
-    setLastPressCoordinates({latitude: auth.viewLocationData.lat,
-      longitude: auth.viewLocationData.long})
+    // setLastPressCoordinates({latitude: auth.viewLocationData.lat,
+    //   longitude: auth.viewLocationData.long})
+    
+      setRegion({
+        latitude: auth.viewLocationData.lat,
+        longitude: auth.viewLocationData.long,
+        latitudeDelta: latitudeDelta,
+        longitudeDelta: longitudeDelta,
+      })
+
   }, [auth.viewLocationData])
 
-  // everytime locationData is updated, get new neary postcodes
+  // everytime heatmap data is updated, update the weighted array for use in the heatmap
   useEffect(() => {
-    // getNearestPostcodes();
     updateWeightedArray();
   }, [auth.heatmapData])
 
-  // useEffect(() => {
-  //   // getNearestPostcodes();
-  //   console.log(lastPressCoordinates);
-  // }, [lastPressCoordinates])
-
-  const confirmSaveLocation = () =>
+  const confirmSaveLocation = () => {
     Alert.alert(
       "Save Location",
       "Are you sure you want to save this location?",
@@ -66,6 +75,7 @@ export const ExportMap = () => {
         onPress: saveLocation }
       ]
     );
+  }
 
   const saveLocation = async () => {
 
@@ -103,17 +113,12 @@ export const ExportMap = () => {
         
       } // end for loop
 
-      console.log(tmpArray);
+      // set weighted array state
       setWeightedLatLngArray(tmpArray);
     }
-    // console.log("Updated weightedLatLng array:")
-    // console.log(weightedLatLngArray);
   }
 
-  if (weightedLatLngArray && auth.heatmapData && auth.viewLocationData) {
-    // console.log("Trying to return mapview");
-    // console.log(auth.heatmapData);
-    // console.log(weightedLatLngArray);
+  if (weightedLatLngArray && auth.heatmapData && auth.userLocationData) {
     return (
       <MapView
         provider={PROVIDER_GOOGLE}
@@ -121,11 +126,20 @@ export const ExportMap = () => {
         //minZoomLevel={0}
         //maxZoomLevel={5}
         onPress={ (event) => setLastPressCoordinates(event.nativeEvent.coordinate)}
-        region={{ latitude: lastPressCoordinates.latitude,
-          longitude: lastPressCoordinates.longitude,
+        initialRegion={{ latitude: auth.userLocationData.lat,
+          longitude: auth.userLocationData.long,
           latitudeDelta: latitudeDelta,
-          longitudeDelta: longitudeDelta }} >
-
+          longitudeDelta: longitudeDelta }}
+          //onRegionChangeComplete runs when the user stops dragging MapView
+        region={region}
+        onRegionChangeComplete={(region) => {
+          setRegion(region);
+          // console.log(region.latitude, region.longitude);
+          // if (markerRef && markerRef.current && markerRef.current.showCallout) {
+          //   markerRef.current.showCallout();
+          // }
+        }}
+      >
         <Heatmap
           points={weightedLatLngArray}
           radius={100}
@@ -133,12 +147,13 @@ export const ExportMap = () => {
           // gradient={gradientObject} // use default
         />
       
-      { lastPressCoordinates &&
+      {lastPressCoordinates &&
       <Marker 
         //description={{}}
         coordinate={lastPressCoordinates}
         // onPress={() => console.log("You pressed me!")}
         //onCalloutPress={() => console.log("You pressed me!")}
+        ref={markerRef}
       >
         <Callout
           onPress={confirmSaveLocation}
@@ -150,6 +165,7 @@ export const ExportMap = () => {
         </Callout>
       </Marker>
       }
+      
   
       <Marker pinColor={colors.lightestColor}
         title="Current Location"

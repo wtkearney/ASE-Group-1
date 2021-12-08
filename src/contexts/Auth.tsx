@@ -192,8 +192,8 @@ const AuthProvider: React.FC = ({children}) => {
       //let heatmapData = await authService.getOuterHeatmapData(outerCode);
 
       setHeatmapData(heatmapData);
-      console.log("This is the heatmap data.")
-      console.log(heatmapData);
+      // console.log("This is the heatmap data.")
+      // console.log(heatmapData);
     }
   };
 
@@ -246,9 +246,6 @@ const AuthProvider: React.FC = ({children}) => {
   const signOut = async () => {
     // Remove data from context, so the App can be notified and send the user to the AuthStack
     setAuthData(undefined);
-
-    // Remove the data from storage to NOT be recoverable in next session.
-    // await SecureStore.deleteItemAsync('AuthData');
   };
 
   return (
