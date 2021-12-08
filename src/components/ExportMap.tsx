@@ -30,8 +30,8 @@ export const ExportMap = () => {
 
   //create a Hook to store our region data.
   const [region, setRegion] = useState({
-    latitude: 51.5079145,
-    longitude: -0.0899163,
+    latitude: auth.viewLocationData.lat,
+    longitude: auth.viewLocationData.long,
     latitudeDelta: latitudeDelta,
     longitudeDelta: longitudeDelta,
   });

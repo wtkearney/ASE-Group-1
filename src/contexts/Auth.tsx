@@ -32,6 +32,7 @@ type AuthContextData = {
   saveLocation(lat: number, long: number): void;
   setViewLocationDataWrapper(lat: number, long: number): void;
   deleteAccount(userEmail: string): void;
+  loadSavedLocationData(): void;
   // getNearestPostcodes(): void;
 };
 
@@ -135,6 +136,8 @@ const AuthProvider: React.FC = ({children}) => {
 
   const loadSavedLocationData = async () => {
 
+    setSavedLocations(undefined);
+
     if (authData) {
       let data = await authService.getSavedLocationData(authData?.userEmail);
 
@@ -142,7 +145,6 @@ const AuthProvider: React.FC = ({children}) => {
         data[i].creationDate = new Date(data[i].creationDate)
       }
 
-      console.log(data);
       setSavedLocations(data);
     }
     
@@ -275,7 +277,7 @@ const AuthProvider: React.FC = ({children}) => {
     // This component will be used to encapsulate the whole App, so all components will have access to the Context
     <AuthContext.Provider value={{
       authData, loading, userLocationData, heatmapData, savedLocations, viewLocationData,
-      verifyPassword, deleteAccount, signUp, signIn, signOut, getUserLocationData,
+      verifyPassword, deleteAccount, signUp, signIn, signOut, getUserLocationData, loadSavedLocationData,
       getHeatmapData, saveLocation, setViewLocationDataWrapper}}>
       {children}
     </AuthContext.Provider>
