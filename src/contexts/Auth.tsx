@@ -16,14 +16,15 @@ export type locationData = {
 type AuthContextData = {
   authData?: AuthData;
   loading: boolean;
-  locationData?: locationData;
-  nearestPostcodes?: PostcodeData;
+  userLocationData?: locationData;
+  // nearestPostcodes?: PostcodeData;
   heatmapData?: Array<heatmapData>;
   signUp(firstName: string, lastName: string, email: string, password: string): Promise<void>;
   signIn(email: string, password: string): Promise<void>;
   signOut(): void;
-  getLatLong(): void;
+  getUserLocationData(): void;
   getHeatmapData(): void;
+  saveLocation(lat: number, long: number): void;
   // getNearestPostcodes(): void;
 };
 
@@ -33,7 +34,7 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 const AuthProvider: React.FC = ({children}) => {
   const [authData, setAuthData] = useState<AuthData>();
 
-  const [locationData, setLocationData] = useState<locationData>();
+  const [userLocationData, setUserLocationData] = useState<locationData>();
 
   const [heatmapData, setHeatmapData] = useState<Array<heatmapData>>();
 
@@ -53,7 +54,7 @@ const AuthProvider: React.FC = ({children}) => {
   useEffect(() => {
     // getNearestPostcodes();
     getHeatmapData();
-  }, [locationData])
+  }, [userLocationData])
 
   const startUp = async () => {
     console.log("Starting up app....");
@@ -62,7 +63,7 @@ const AuthProvider: React.FC = ({children}) => {
     await loadFonts();
 
     // get user location
-    await getLatLong();
+    await getUserLocationData();
 
 
     if (isLoaded('Roboto-Regular')) {
@@ -81,7 +82,14 @@ const AuthProvider: React.FC = ({children}) => {
     // setFontLoaded(true);
   }
 
-  const getLatLong = async () => {
+  const saveLocation = async (lat: number, long: number) => {
+
+    if (authData && authData.userEmail) {
+      await authService.saveLocation(lat, long, authData.userEmail);
+    }
+  };
+
+  const getUserLocationData = async () => {
 
     let {status} = await Location.requestForegroundPermissionsAsync();
     let location = await Location.getCurrentPositionAsync({});
@@ -90,32 +98,36 @@ const AuthProvider: React.FC = ({children}) => {
 
     if (location) {
 
-      let postcode = await authService.getNearestPostcodes(location.coords.latitude, location.coords.longitude, 1);
+      let postcodeData = await Location.reverseGeocodeAsync({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude
+      })
 
-      // console.log(postcode)
-
-      if (postcode) {
+      if (postcodeData[0].postalCode) {
 
         const locationData = {
           lat: location.coords.latitude,
           long: location.coords.longitude,
-          postcode: postcode
+          postcode: postcodeData[0].postalCode
         };
   
         // console.log(locationData);
-        setLocationData(locationData);
+        setUserLocationData(locationData);
       }
     }
   }
 
   const getHeatmapData = async () => {
     
-    if (locationData) {
-      let heatmapData = await authService.getHeatmapData(locationData.postcode);
+    if (userLocationData) {
+      // var outerCode = userLocationData.postcode.replace(/[" "].*/, '').toUpperCase();
+      // console.log(outerCode);
+      let heatmapData = await authService.getHeatmapData(userLocationData.postcode);
+      //let heatmapData = await authService.getOuterHeatmapData(outerCode);
 
       setHeatmapData(heatmapData);
-      // console.log("This is the heatmap data.")
-      // console.log(heatmapData);
+      console.log("This is the heatmap data.")
+      console.log(heatmapData);
     }
   };
 
@@ -176,8 +188,8 @@ const AuthProvider: React.FC = ({children}) => {
   return (
     // This component will be used to encapsulate the whole App, so all components will have access to the Context
     <AuthContext.Provider value={{
-      authData, loading, locationData, nearestPostcodes, heatmapData,
-      signUp, signIn, signOut, getLatLong, getHeatmapData}}>
+      authData, loading, userLocationData, heatmapData,
+      signUp, signIn, signOut, getUserLocationData, getHeatmapData, saveLocation}}>
       {children}
     </AuthContext.Provider>
   );

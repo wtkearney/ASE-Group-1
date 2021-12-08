@@ -20,6 +20,14 @@ const styles = StyleSheet.create({
         // justifyContent: 'center',
     },
 
+    calloutTitle : {
+
+    },
+
+    calloutDescription : {
+
+    },
+
     fadingContainer: {
       backgroundColor: colors.darkestColor,
     },
