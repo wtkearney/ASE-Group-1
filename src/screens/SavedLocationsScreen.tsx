@@ -52,7 +52,7 @@ const SavedLocationsScreen = () => {
     } else  {
       return(
         <View style={styles.container}>
-        <Loading />
+        <Loading/>
       </View>
       )
     }

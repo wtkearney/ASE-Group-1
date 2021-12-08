@@ -2,7 +2,7 @@ import React from 'react';
 
 import SavedLocationsScreen from "../screens/SavedLocationsScreen";
 import MapScreen from "../screens/MapScreen";
-import UserAccountScreen from "../screens/UserAccountScreen";
+import AccountScreen from "../screens/AccountScreen";
 import {RootStackParamList} from '../screens/RootStackParams';
 import { TouchableOpacity, Text } from "react-native";
 import {useNavigation} from '@react-navigation/native';
@@ -92,7 +92,7 @@ function StackNav() {
     />
     <Stack.Screen
       name="User Account"
-      component={UserAccountScreen}
+      component={AccountScreen}
       options={
         ({ navigation }) => ({
           headerShown: true,

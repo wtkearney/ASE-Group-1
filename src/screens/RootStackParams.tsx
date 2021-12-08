@@ -1,5 +1,3 @@
-
-
 export type RootStackParamList = {
     "Saved Locations": undefined;
     TabNav: undefined;
