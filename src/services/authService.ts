@@ -18,6 +18,11 @@ const headers = {
     }
 };
 
+export type savedLocationData = {
+    latitude: number;
+    longitude: number;
+}
+
 export type priceData = {
     year: string;
     price: number;
@@ -104,14 +109,14 @@ const saveLocation = async (lat: number, long: number, userEmail: string): Promi
 
     // create payload to send to webserver
     const payload = {
-        uid: userEmail,
+        userEmail: userEmail,
         longitude: long,
         latitude: lat
     };
 
     // embed the whole function body inside a Promise constructor, so should any error happen, it will be converted to a rejection
     return new Promise((resolve, reject) => {
-        axios.post(serverURL + apiPath + "/upload", payload, headers).then((response) => {
+        axios.post(serverURL + apiPath + "/saveLocation", payload, headers).then((response) => {
             // check response status
             if (response.status == 200) {
                 // user account found and verified

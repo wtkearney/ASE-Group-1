@@ -1,4 +1,4 @@
-import React, {createContext, useState, useContext, useEffect} from 'react';
+import React, {createContext, useState, useContext, useEffect, Dispatch, SetStateAction} from 'react';
 // import * as SecureStore from 'expo-secure-store';
 import * as Location from 'expo-location';
 
@@ -13,10 +13,18 @@ export type locationData = {
   postcode: string;
 }
 
+export type savedLocationData = {
+  lat: number;
+  long: number;
+  creationDate: Date;
+}
+
 type AuthContextData = {
   authData?: AuthData;
   loading: boolean;
   userLocationData?: locationData;
+  viewLocationData: locationData;
+  savedLocations?: Array<savedLocationData>;
   // nearestPostcodes?: PostcodeData;
   heatmapData?: Array<heatmapData>;
   signUp(firstName: string, lastName: string, email: string, password: string): Promise<void>;
@@ -25,6 +33,7 @@ type AuthContextData = {
   getUserLocationData(): void;
   getHeatmapData(): void;
   saveLocation(lat: number, long: number): void;
+  setViewLocationDataWrapper(lat: number, long: number): void;
   // getNearestPostcodes(): void;
 };
 
@@ -34,13 +43,19 @@ const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 const AuthProvider: React.FC = ({children}) => {
   const [authData, setAuthData] = useState<AuthData>();
 
+  // this is the user current location
   const [userLocationData, setUserLocationData] = useState<locationData>();
+
+  // this is the location that will be viewed on the map
+  const [viewLocationData, setViewLocationData] = useState<locationData>({lat: 0, long: 0, postcode: ""});
 
   const [heatmapData, setHeatmapData] = useState<Array<heatmapData>>();
 
   // const [fontLoaded, setFontLoaded] = useState<boolean>(false);
 
   const [nearestPostcodes, setNearestPostcodes] = useState<PostcodeData>();
+
+  const [savedLocations, setSavedLocations] = useState<Array<savedLocationData>>();
 
   // AuthContext starts with loading = true and stays like that until the data is loaded from storage
   const [loading, setLoading] = useState(true);
@@ -54,6 +69,20 @@ const AuthProvider: React.FC = ({children}) => {
   useEffect(() => {
     // getNearestPostcodes();
     getHeatmapData();
+  }, [viewLocationData])
+
+  useEffect(() => {
+    // getNearestPostcodes();
+    if (userLocationData) {
+      const locationData = {
+        lat: userLocationData.lat,
+        long: userLocationData.long,
+        postcode: userLocationData.postcode
+      };
+      setViewLocationData(locationData);
+
+    }
+    
   }, [userLocationData])
 
   const startUp = async () => {
@@ -65,10 +94,47 @@ const AuthProvider: React.FC = ({children}) => {
     // get user location
     await getUserLocationData();
 
+    if (userLocationData) {
+      setViewLocationData(userLocationData);
+    }
+
+    await loadSavedLocationData();
 
     if (isLoaded('Roboto-Regular')) {
       setLoading(false)
     }
+  }
+
+  const setViewLocationDataWrapper = async (lat: number, long: number) => {
+
+    let postcodeData = await Location.reverseGeocodeAsync({
+      latitude: lat,
+      longitude: long
+    })
+
+    if (postcodeData[0].postalCode) {
+
+      const locationData = {
+        lat: lat,
+        long: long,
+        postcode: postcodeData[0].postalCode
+      };
+      setViewLocationData(locationData);
+    }
+  }
+
+  const loadSavedLocationData = async () => {
+  
+    const fakeData = [
+      {lat: 50.828748334140904,
+      long: -0.15194431802911557,
+      creationDate: new Date("2021-12-08T08:00:30.000+00:00")},
+      {lat: 50.82829917805563,
+      long: -0.17806380987167358,
+      creationDate: new Date("2021-12-08T09:30:30.000+00:00")}
+    ]
+
+    setSavedLocations(fakeData);
   }
 
   const loadFonts = async () => {
@@ -119,10 +185,10 @@ const AuthProvider: React.FC = ({children}) => {
 
   const getHeatmapData = async () => {
     
-    if (userLocationData) {
+    if (viewLocationData && viewLocationData.postcode) {
       // var outerCode = userLocationData.postcode.replace(/[" "].*/, '').toUpperCase();
       // console.log(outerCode);
-      let heatmapData = await authService.getHeatmapData(userLocationData.postcode);
+      let heatmapData = await authService.getHeatmapData(viewLocationData.postcode);
       //let heatmapData = await authService.getOuterHeatmapData(outerCode);
 
       setHeatmapData(heatmapData);
@@ -188,8 +254,8 @@ const AuthProvider: React.FC = ({children}) => {
   return (
     // This component will be used to encapsulate the whole App, so all components will have access to the Context
     <AuthContext.Provider value={{
-      authData, loading, userLocationData, heatmapData,
-      signUp, signIn, signOut, getUserLocationData, getHeatmapData, saveLocation}}>
+      authData, loading, userLocationData, heatmapData, savedLocations, viewLocationData,
+      signUp, signIn, signOut, getUserLocationData, getHeatmapData, saveLocation, setViewLocationDataWrapper}}>
       {children}
     </AuthContext.Provider>
   );

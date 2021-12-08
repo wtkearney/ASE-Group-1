@@ -28,15 +28,29 @@ export const ExportMap = () => {
   const [latitudeDelta, setLatitudeDelta] = useState<number>(0.005);
   const [longitudeDelta, setLongitudeDelta] = useState<number>(0.005);
 
-  const [lastPressCoordinates, setLastPressCoordinates] = useState<LatLng>();
+  const [lastPressCoordinates, setLastPressCoordinates] = useState<LatLng>({
+    latitude: auth.viewLocationData.lat,
+    longitude: auth.viewLocationData.long
+  });
 
   const markerRef = useRef(null);
+
+  useEffect(() => {
+    // getNearestPostcodes();
+    setLastPressCoordinates({latitude: auth.viewLocationData.lat,
+      longitude: auth.viewLocationData.long})
+  }, [auth.viewLocationData])
 
   // everytime locationData is updated, get new neary postcodes
   useEffect(() => {
     // getNearestPostcodes();
     updateWeightedArray();
   }, [auth.heatmapData])
+
+  // useEffect(() => {
+  //   // getNearestPostcodes();
+  //   console.log(lastPressCoordinates);
+  // }, [lastPressCoordinates])
 
   const confirmSaveLocation = () =>
     Alert.alert(
@@ -96,7 +110,7 @@ export const ExportMap = () => {
     // console.log(weightedLatLngArray);
   }
 
-  if (weightedLatLngArray && auth.heatmapData && auth.userLocationData) {
+  if (weightedLatLngArray && auth.heatmapData && auth.viewLocationData) {
     // console.log("Trying to return mapview");
     // console.log(auth.heatmapData);
     // console.log(weightedLatLngArray);
@@ -104,9 +118,11 @@ export const ExportMap = () => {
       <MapView
         provider={PROVIDER_GOOGLE}
         style={styles.map}
+        //minZoomLevel={0}
+        //maxZoomLevel={5}
         onPress={ (event) => setLastPressCoordinates(event.nativeEvent.coordinate)}
-        initialRegion={{ latitude: auth.userLocationData.lat,
-          longitude: auth.userLocationData.long,
+        region={{ latitude: lastPressCoordinates.latitude,
+          longitude: lastPressCoordinates.longitude,
           latitudeDelta: latitudeDelta,
           longitudeDelta: longitudeDelta }} >
 
@@ -137,8 +153,8 @@ export const ExportMap = () => {
   
       <Marker pinColor={colors.lightestColor}
         title="Current Location"
-        description={"Lat: " + auth.userLocationData.lat.toFixed(4) + ", Long: " + auth.userLocationData.long.toFixed(4)}
-        coordinate={{ latitude: auth.userLocationData.lat, longitude: auth.userLocationData.long }}/>
+        description={"Lat: " + auth.viewLocationData.lat.toFixed(4) + ", Long: " + auth.viewLocationData.long.toFixed(4)}
+        coordinate={{ latitude: auth.viewLocationData.lat, longitude: auth.viewLocationData.long }}/>
     </MapView>
   
     );
