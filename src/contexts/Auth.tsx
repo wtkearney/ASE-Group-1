@@ -27,6 +27,7 @@ type AuthContextData = {
   savedLocations?: Array<savedLocationData>;
   // nearestPostcodes?: PostcodeData;
   heatmapData?: Array<heatmapData>;
+  verifyPassword(email: string, _password: string): Promise<boolean>;
   signUp(firstName: string, lastName: string, email: string, password: string): Promise<void>;
   signIn(email: string, password: string): Promise<void>;
   signOut(): void;
@@ -34,6 +35,7 @@ type AuthContextData = {
   getHeatmapData(): void;
   saveLocation(lat: number, long: number): void;
   setViewLocationDataWrapper(lat: number, long: number): void;
+  deleteAccount(userEmail: string): void;
   // getNearestPostcodes(): void;
 };
 
@@ -122,6 +124,13 @@ const AuthProvider: React.FC = ({children}) => {
       setViewLocationData(locationData);
     }
   }
+
+  const deleteAccount = async (userEmail: string) => {
+    let result = await authService.deleteAccount(userEmail);
+    if (result) {
+      signOut();
+    }
+  };
 
   const loadSavedLocationData = async () => {
   
@@ -226,6 +235,18 @@ const AuthProvider: React.FC = ({children}) => {
     })
   };
 
+  const verifyPassword = async (email: string, _password: string): Promise<boolean> => {
+    return new Promise((resolve, reject) => {
+      // call the service passing credential (email and password).
+      authService.signIn(email, _password)
+        .then(_authData => {
+          resolve(true);
+        }).catch(error => {
+          resolve(false);
+        });
+    }) // end promise
+  }
+
     const signIn = async (email: string, _password: string): Promise<void> => {
       return new Promise((resolve, reject) => {
         // call the service passing credential (email and password).
@@ -252,7 +273,8 @@ const AuthProvider: React.FC = ({children}) => {
     // This component will be used to encapsulate the whole App, so all components will have access to the Context
     <AuthContext.Provider value={{
       authData, loading, userLocationData, heatmapData, savedLocations, viewLocationData,
-      signUp, signIn, signOut, getUserLocationData, getHeatmapData, saveLocation, setViewLocationDataWrapper}}>
+      verifyPassword, deleteAccount, signUp, signIn, signOut, getUserLocationData,
+      getHeatmapData, saveLocation, setViewLocationDataWrapper}}>
       {children}
     </AuthContext.Provider>
   );

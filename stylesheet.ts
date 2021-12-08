@@ -105,6 +105,15 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         marginHorizontal: 40
       },
+    
+      appButtonContainerDanger: {
+        elevation: 8,
+        backgroundColor: colors.highlightColor,
+        borderRadius: 40,
+        paddingVertical: 15,
+        paddingHorizontal: 20,
+        marginHorizontal: 40
+      },
 
     appButtonText: {
       fontFamily: 'Roboto-Bold',

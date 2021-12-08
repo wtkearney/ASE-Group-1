@@ -72,7 +72,7 @@ export const ExportMap = () => {
           style: "cancel"
         },
         { text: "OK",
-        onPress: saveLocation }
+        onPress: () => saveLocation() }
       ]
     );
   }
