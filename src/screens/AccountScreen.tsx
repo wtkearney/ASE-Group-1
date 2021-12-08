@@ -87,6 +87,30 @@ const AccountScreen = () => {
       </Dialog.Container>
 
       <FlatList
+        scrollEnabled={false}
+        ListFooterComponent=
+          {deleteAccountIsLocked ?
+          <View>
+            <View style={styles.space}/>
+          <TouchableOpacity
+                style={styles.appButtonContainerDanger}
+                onPress={() => confirmDeleteAccount()}
+              >
+                
+                <Text style={styles.appButtonText}>Delete Account</Text>
+          </TouchableOpacity>
+          </View>
+          :
+          <View>
+            <View style={styles.space}/>
+          <TouchableOpacity
+                style={styles.appButtonContainer}
+                onPress={() => unlockAccountDelete()}
+              >
+                <Text style={styles.appButtonText}>Unlock delete account</Text>
+          </TouchableOpacity>
+          </View>
+          }
         data={[
           {
             id: 1,
@@ -113,23 +137,7 @@ const AccountScreen = () => {
         keyExtractor={(item) => item.id.toString()}
       />
 
-    {deleteAccountIsLocked ?
-    
-    <TouchableOpacity
-          style={styles.appButtonContainerDanger}
-          onPress={() => confirmDeleteAccount()}
-        >
-          <Text style={styles.appButtonText}>Delete Account</Text>
-    </TouchableOpacity>
-    
-    :
-    
-    <TouchableOpacity
-          style={styles.appButtonContainer}
-          onPress={() => unlockAccountDelete()}
-        >
-          <Text style={styles.appButtonText}>Unlock delete account</Text>
-    </TouchableOpacity>} 
+     
     
     
       

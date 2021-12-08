@@ -97,6 +97,11 @@ const styles = StyleSheet.create({
       color: colors.highlightColor
     },
 
+    listFooterComponentStyle: {
+      marginTop: 25,
+      paddingVertical: 25,
+    },
+
     appButtonContainer: {
         elevation: 8,
         backgroundColor: colors.midDarkColor,
@@ -112,7 +117,7 @@ const styles = StyleSheet.create({
         borderRadius: 40,
         paddingVertical: 15,
         paddingHorizontal: 20,
-        marginHorizontal: 40
+        marginHorizontal: 40,
       },
 
     appButtonText: {
