@@ -122,7 +122,12 @@ const getSavedLocationData = async (userEmail: string): Promise<savedLocationDat
         .catch(err => {
             //console.log(err);
             if (err.response) {
-                reject(new Error("Error " + err.response.status ));
+                if (err.response.status == 404) {
+                    // user doesn't have any saved locations; resolve with empty list
+                    resolve([]);
+                } else {
+                    reject(new Error("Error " + err.response.status ));
+                }
             } else if (err.request) {
                 // client never received a response, or request never left
                 reject(new Error("Client never received a response, or request never left."));

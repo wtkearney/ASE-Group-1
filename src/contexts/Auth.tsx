@@ -164,8 +164,11 @@ const AuthProvider: React.FC = ({children}) => {
   const saveLocation = async (lat: number, long: number) => {
 
     if (authData && authData.userEmail) {
-      await authService.saveLocation(lat, long, authData.userEmail);
+      await authService.saveLocation(lat, long, authData.userEmail)
+        .then(() => loadSavedLocationData())
     }
+    
+
   };
 
   const getUserLocationData = async () => {

@@ -64,7 +64,6 @@ const SavedLocationsScreen = () => {
   <FlatList
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={() => {
-          //
           updateUserLocationData();
         }} />
       }
