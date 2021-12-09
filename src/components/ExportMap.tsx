@@ -30,7 +30,7 @@ export const ExportMap = () => {
   const [latitudeDelta, setLatitudeDelta] = useState<number>(0.005);
   const [longitudeDelta, setLongitudeDelta] = useState<number>(0.005);
 
-  const [heatmapRadius, setHeatmapRadius] = useState<number>(20);
+  const [heatmapRadius, setHeatmapRadius] = useState<number>(250);
 
   //create a Hook to store our region data.
   const [region, setRegion] = useState({
@@ -150,9 +150,9 @@ export const ExportMap = () => {
           //onRegionChangeComplete runs when the user stops dragging MapView
         region={region}
         onRegionChangeComplete={(region) => {
-          if (latitudeDelta < 0.03) {
-            console.log("Lat delta: ", latitudeDelta)
-          }
+          // if (latitudeDelta < 0.03) {
+          //   console.log("Lat delta: ", latitudeDelta)
+          // }
 
           setLatitudeDelta(region.latitudeDelta);
           setLongitudeDelta(region.longitudeDelta);
@@ -204,17 +204,17 @@ export const ExportMap = () => {
         <TouchableOpacity
           style={{}}
           onPress={() => {
-            if (heatmapRadius < 250) {
-              setHeatmapRadius(heatmapRadius + 10);
+            if (heatmapRadius < 500) {
+              setHeatmapRadius(heatmapRadius + 5);
             }
-            console.log(heatmapRadius);
+            // console.log(heatmapRadius);
           }}>
           <Ionicons name="add-circle-outline" style={styles.heatmapControlIcons} size={50}/>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
             if (heatmapRadius > 10) {
-              setHeatmapRadius(heatmapRadius - 10);
+              setHeatmapRadius(heatmapRadius - 5);
             }
           }}>
           <Ionicons name="remove-circle-outline" style={styles.heatmapControlIcons} size={50}/>
