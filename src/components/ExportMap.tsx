@@ -31,10 +31,14 @@ export const ExportMap = () => {
   const [latitudeDelta, setLatitudeDelta] = useState<number>(0.005);
   const [longitudeDelta, setLongitudeDelta] = useState<number>(0.005);
 
-  const [heatmapRadius, setHeatmapRadius] = useState<number>(250);
+  const [heatmapRadius, setHeatmapRadius] = useState<number>(50);
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+  useEffect(() => {
+    setHeatmapRadius(250);
+  }, []);
 
   //create a Hook to store our region data.
   const [region, setRegion] = useState({
