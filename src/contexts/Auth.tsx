@@ -3,6 +3,7 @@ import React, {createContext, useState, useContext, useEffect, Dispatch, SetStat
 import * as Location from 'expo-location';
 
 import {AuthData, PostcodeData, heatmapData, authService, savedLocationData} from '../services/authService';
+import { Alert } from "react-native";
 
 import * as Font from 'expo-font';
 import { isLoaded } from 'expo-font';
@@ -111,20 +112,37 @@ const AuthProvider: React.FC = ({children}) => {
 
   const setViewLocationDataWrapper = async (lat: number, long: number) => {
 
-    let postcodeData = await Location.reverseGeocodeAsync({
-      latitude: lat,
-      longitude: long
-    })
+    // console.log("Updating view location....")
+    // console.log("Lat: ", lat)
+    // console.log("Long: ", long)
 
-    if (postcodeData[0].postalCode) {
+    await authService.getNearestPostcodes(lat, long, 1)
+      .then(postcode => {
+        // console.log("This is the returned postcode:")
+        // console.log(postcode)
 
-      const locationData = {
-        lat: lat,
-        long: long,
-        postcode: postcodeData[0].postalCode
-      };
-      setViewLocationData(locationData);
-    }
+        const locationData = {
+          lat: lat,
+          long: long,
+          postcode: postcode
+        };
+        setViewLocationData(locationData);
+
+      })
+      .catch(error => {
+        console.log(error);
+
+        Alert.alert(
+          "Hmmmm",
+          "Looks like we weren't able to get a postcode for those coordinates.",
+          [
+            { text: "OK",
+            onPress: () => null }
+          ]
+        );
+
+      })
+
   }
 
   const deleteAccount = async (userEmail: string) => {
@@ -201,7 +219,7 @@ const AuthProvider: React.FC = ({children}) => {
 
   const getHeatmapData = async () => {
 
-    console.log("Updating heatmap data")
+    // console.log("Updating heatmap data")
     
     if (viewLocationData && viewLocationData.postcode) {
       // var outerCode = userLocationData.postcode.replace(/[" "].*/, '').toUpperCase();
@@ -214,18 +232,6 @@ const AuthProvider: React.FC = ({children}) => {
       // console.log(heatmapData);
     }
   };
-
-  // // function to get our location
-  // const getNearestPostcodes = async () => {
-    
-  //   if (locationData) {
-  //     let postcodeData = await authService.getNearestPostcodes(locationData.lat, locationData.long);
-
-  //     setNearestPostcodes(postcodeData);
-  //     console.log(postcodeData);
-  //   }
-
-  // };
 
   const signUp = async (firstName: string, lastName: string, email: string, _password: string): Promise<void> => {
     return new Promise((resolve, reject) => {
