@@ -1,66 +1,50 @@
 import React, {useState} from 'react';
 import {Text, View, TouchableOpacity, FlatList, Alert} from "react-native";
-import {styles} from "../../stylesheet";
+import {styles, colors} from "../../stylesheet";
 import {useAuth} from '../contexts/Auth';
 import Dialog from "react-native-dialog";
+import {Ionicons} from '@expo/vector-icons';
 
 const AccountScreen = () => {
   const auth = useAuth();
 
-  const [deleteAccountIsLocked, setDeleteAccountIsLocked] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
+  const [showVerification, setShowVerification] = useState(false);
+  const [password, setPassword] = useState("");
 
-  const [verifyPassVisible, setVerifyPassVisible] = useState(false);
-
-  const [_password, onChangePassword] = useState("");
-
-  const handleVerifyCancel = () => {
-    onChangePassword("");
-    // this will make the dialog disappear
-    setVerifyPassVisible(false);
+  function handleVerifyCancel() {
+    setPassword("");
+    setShowVerification(false);
   };
 
-  const handleAccountDeleteUnlock = async () => {
-    // The user has pressed the "Verify" button
-    // we will now check if the password is correct, and if so unlock the button
-
+  async function verifyPassword() {
     if (auth.authData) {
-      let authData = await auth.verifyPassword(auth.authData?.userEmail, _password)
-
-      if (authData) {
-
-        console.log("Password is correct");
-        // unlock the delete account button
-        setDeleteAccountIsLocked(true);
-      } else {
-        console.log("Password is NOT correct");
+      if (await auth.verifyPassword(auth.authData?.userEmail, password)) {
+        setIsVerified(true);
       }
     }
 
-    onChangePassword("");
-    // hide the dialog
-    setVerifyPassVisible(false);
+    setPassword("");
+    setShowVerification(false);
   };
 
-  const confirmDeleteAccount = () => {
+  function confirmDeleteAccount() {
     Alert.alert(
       "Delete Account",
-      "Are you sure you want to delete your account? This action cannot be undone.",
+      "This action cannot be undone.",
       [
         {
           text: "Cancel",
           onPress: () => console.log("Cancel Pressed"),
           style: "cancel"
         },
-        { text: "Yes, delete my account",
-        onPress: () => deleteAccount() }
+        {
+          text: "Delete",
+          onPress: () => deleteAccount()
+        }
       ]
     );
   }
-
-  const unlockAccountDelete = async () => {
-    // this will make teh dialog visible
-    setVerifyPassVisible(true);
-  };
 
   const deleteAccount = async () => {
     if (auth.authData) {
@@ -70,47 +54,51 @@ const AccountScreen = () => {
 
   return (
     <View style={styles.backgroundContainer}>
-      <Dialog.Container visible={verifyPassVisible}>
-        <Dialog.Title>Please verify your password</Dialog.Title>
+      <Dialog.Container visible={showVerification}>
+        <Dialog.Title>Verify Password</Dialog.Title>
+        <Dialog.Description>Enter your password below.</Dialog.Description>
         <Dialog.Input
-          value={_password}
-          onChangeText={onChangePassword}
+          value={password}
+          onChangeText={setPassword}
           placeholder="Password"
           autoCorrect={false}
           clearButtonMode='while-editing'
           secureTextEntry={true}
           textContentType='password'
-          // placeholderTextColor={colors.midLightColor}
-          />
-        <Dialog.Button label="Verify" onPress={handleAccountDeleteUnlock} />
-        <Dialog.Button label="Cancel" onPress={handleVerifyCancel} />
+        />
+        <Dialog.Button label="Verify" onPress={verifyPassword}/>
+        <Dialog.Button label="Cancel" onPress={handleVerifyCancel}/>
       </Dialog.Container>
-
       <FlatList
         scrollEnabled={false}
-        ListFooterComponent=
-          {deleteAccountIsLocked ?
+        ListFooterComponent={isVerified ?
           <View>
             <View style={styles.space}/>
-          <TouchableOpacity
-                style={styles.appButtonContainerDanger}
-                onPress={() => confirmDeleteAccount()}
-              >
-                
-                <Text style={styles.appButtonText}>Delete Account</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.appButtonContainer}
+              onPress={() => confirmDeleteAccount()}
+            >
+              <Text style={styles.appButtonText}>
+                <Ionicons name="lock-open-outline" color={colors.lightestColor} size={18}/>
+                {" "}Delete Account
+              </Text>
+            </TouchableOpacity>
           </View>
           :
           <View>
             <View style={styles.space}/>
-          <TouchableOpacity
-                style={styles.appButtonContainer}
-                onPress={() => unlockAccountDelete()}
-              >
-                <Text style={styles.appButtonText}>Unlock delete account</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.appButtonContainerDanger}
+              onPress={() => setShowVerification(true)}
+            >
+              <Text style={styles.appButtonText}>
+                <Ionicons name="lock-closed-outline" color={colors.lightestColor} size={18}/>
+                {" "}Delete Account
+              </Text>
+              
+            </TouchableOpacity>
           </View>
-          }
+        }
         data={[
           {
             id: 1,
@@ -136,12 +124,6 @@ const AccountScreen = () => {
         )}
         keyExtractor={(item) => item.id.toString()}
       />
-
-     
-    
-    
-      
-
     </View>
   );
 };

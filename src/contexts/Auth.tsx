@@ -17,7 +17,7 @@ export type locationData = {
 
 type AuthContextData = {
   authData?: AuthData;
-  loading: boolean;
+  isAuthorised: boolean;
   userLocationData?: locationData;
   viewLocationData: locationData;
   savedLocations?: Array<savedLocationData>;
@@ -281,7 +281,7 @@ const AuthProvider: React.FC = ({children}) => {
   return (
     // This component will be used to encapsulate the whole App, so all components will have access to the Context
     <AuthContext.Provider value={{
-      authData, loading, userLocationData, heatmapData, savedLocations, viewLocationData,
+      authData, isAuthorised: loading, userLocationData, heatmapData, savedLocations, viewLocationData,
       verifyPassword, deleteAccount, signUp, signIn, signOut, getUserLocationData, loadSavedLocationData,
       getHeatmapData, saveLocation, setViewLocationDataWrapper}}>
       {children}

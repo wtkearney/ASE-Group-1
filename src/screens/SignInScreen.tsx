@@ -1,5 +1,7 @@
+import Ionicons from '@expo/vector-icons/build/Ionicons';
 import React, {useState} from 'react';
 import {TouchableOpacity, Text, View, TextInput, Keyboard, TouchableWithoutFeedback} from 'react-native';
+import {Divider} from 'react-native-elements';
 import {styles, colors} from "../../stylesheet";
 import {useAuth} from '../contexts/Auth';
 
@@ -43,12 +45,17 @@ const SignInScreen = () => {
         placeholderTextColor={colors.midLightColor}
       />
       <View style={styles.space}/>
+      <Divider/>
+        <View style={styles.space}/>
         <TouchableOpacity
           style={styles.appButtonContainer}
           disabled={isLocked}
           onPress={() => signIn(email, password)}
         >
-          <Text style={styles.appButtonText}>Sign In</Text>
+          <Text style={styles.appButtonText}>
+            <Ionicons name="log-in-outline" color={colors.lightestColor} size={18}/>
+            {" "}Sign In
+          </Text>
         </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>

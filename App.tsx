@@ -1,11 +1,11 @@
 import React from 'react';
 import {Router} from './src/routes/Router';
 import {AuthProvider} from './src/contexts/Auth';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 const App = () => {
   return (
-     <SafeAreaProvider>
+    <SafeAreaProvider>
       <AuthProvider>
         <Router/>
       </AuthProvider>

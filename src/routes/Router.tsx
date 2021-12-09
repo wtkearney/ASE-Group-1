@@ -7,17 +7,15 @@ import {useAuth} from '../contexts/Auth';
 import SplashScreen from '../screens/SplashScreen';
 
 export const Router = () => {
-  const {authData, loading} = useAuth();
+  const {authData, isAuthorised} = useAuth();
 
-  if (loading) {
-    console.log("Loading screen...");
+  if (isAuthorised) {
     return (<SplashScreen/>)
   }
 
   return (
     <NavigationContainer>
-      {authData ? <AppStack /> : <AuthStack />}
-      {/* {authData ? <AuthStack  /> : <AppStack />} */}
+      {authData ? <AppStack/> : <AuthStack/>}
     </NavigationContainer>
   );
 };
