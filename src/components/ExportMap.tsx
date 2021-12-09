@@ -1,22 +1,23 @@
 import React, {useState, useContext, useEffect, useRef} from 'react';
 // import {View, ActivityIndicator} from 'react-native';
-import  MapView, { Marker, Heatmap, PROVIDER_GOOGLE, LatLng, Callout} from 'react-native-maps';
+import  MapView, { Marker, Heatmap, PROVIDER_GOOGLE, LatLng, Callout, MapEvent} from 'react-native-maps';
 import {useAuth} from '../contexts/Auth';
 import {styles, colors} from "../../stylesheet";
-import { View, ActivityIndicator, Text, Alert, Button, Touchable } from "react-native";
+import { View, Text, Alert, Switch, TouchableOpacity } from "react-native";
 import {Loading} from '../components/Loading';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RootStackParamList} from '../screens/RootStackParams';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {  } from 'react-native-gesture-handler';
 import {Ionicons} from '@expo/vector-icons';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 type exportMapProp = StackNavigationProp<RootStackParamList, 'ExportMap'>;
 
 export type WeightedLatLng = {
   latitude: number;
   longitude: number;
-  weight?: number;
+  weight: number;
 }
 
 export const ExportMap = () => {
@@ -31,6 +32,9 @@ export const ExportMap = () => {
   const [longitudeDelta, setLongitudeDelta] = useState<number>(0.005);
 
   const [heatmapRadius, setHeatmapRadius] = useState<number>(250);
+
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   //create a Hook to store our region data.
   const [region, setRegion] = useState({
@@ -89,6 +93,33 @@ export const ExportMap = () => {
     );
   }
 
+  var formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'GBP',
+    maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
+    // minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
+  });
+
+  const mapMarkers = () => {
+    if (weightedLatLngArray) {
+      return weightedLatLngArray.map((item) =>
+      <Marker
+        key={item.weight}
+        coordinate={{ latitude: item.latitude, longitude: item.longitude }}
+        description={"Average price: " + formatter.format(item.weight)}
+        pinColor={colors.midColor}
+        onPress={(event) => handleMarkerPress(event)}
+      >
+      </Marker >
+    )
+    }
+  }
+
+  const handleMarkerPress = (e: MapEvent) => {
+    // stop onPress event from propagating to mapView
+     e.stopPropagation();
+ }
+
   const saveLocation = async () => {
 
     console.log("Saving Location!")
@@ -99,7 +130,6 @@ export const ExportMap = () => {
 
     navigation.navigate("Saved Locations");
   }
-
 
   const updateWeightedArray = async () => {
 
@@ -120,12 +150,9 @@ export const ExportMap = () => {
           // add the entry to our temp array
           tmpArray.push(newEntry)
 
-          }
-        
+        }
       } // end for loop
-
       // set weighted array state
-      console.log(tmpArray.length);
       setWeightedLatLngArray(tmpArray);
     }
   }
@@ -141,7 +168,7 @@ export const ExportMap = () => {
         provider={PROVIDER_GOOGLE}
         style={styles.map}
         minZoomLevel={12}
-        maxZoomLevel={15}
+        maxZoomLevel={20}
         onPress={ (event) => setMarkerCoordinates(event.nativeEvent.coordinate)}
         initialRegion={{ latitude: auth.userLocationData.lat,
           longitude: auth.userLocationData.long,
@@ -163,7 +190,7 @@ export const ExportMap = () => {
           // }
         }}
       >
-        
+        {isEnabled && mapMarkers()}
 
       <Heatmap
         key={heatmapRadius}
@@ -198,6 +225,17 @@ export const ExportMap = () => {
         description={"Lat: " + auth.viewLocationData.lat.toFixed(4) + ", Long: " + auth.viewLocationData.long.toFixed(4)}
         coordinate={{ latitude: auth.viewLocationData.lat, longitude: auth.viewLocationData.long }}/> */}
     </MapView>
+    <View style={styles.switchView}>
+    <Text style={styles.switchText}>Show markers?</Text>
+      <Switch
+          trackColor={{ false: colors.midDarkColor, true: colors.midDarkColor }}
+          thumbColor={isEnabled ? colors.highlightColor : colors.lightestColor}
+          ios_backgroundColor={colors.midDarkColor}
+          onValueChange={toggleSwitch}
+          value={isEnabled}
+        />
+    </View>
+
       <View style={styles.heatmapControlView}>
         <Text style={styles.heatmapControlText}>Heatmap</Text>
         <Text style={styles.heatmapControlText}>Radius: {heatmapRadius}</Text>
@@ -207,7 +245,6 @@ export const ExportMap = () => {
             if (heatmapRadius < 500) {
               setHeatmapRadius(heatmapRadius + 5);
             }
-            // console.log(heatmapRadius);
           }}>
           <Ionicons name="add-circle-outline" style={styles.heatmapControlIcons} size={50}/>
         </TouchableOpacity>

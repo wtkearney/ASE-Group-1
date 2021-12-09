@@ -161,12 +161,30 @@ const styles = StyleSheet.create({
   heatmapControlView: {
     position: 'absolute',
     right: 20,
-    bottom: 20,
+    bottom: 30,
     height: 150,
     width: 80,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(13, 19, 33, 0.2)',
+    backgroundColor: 'rgba(13, 19, 33, 0.3)',
+    borderRadius: 20
+  },
+
+  switchText: {
+    fontFamily: 'Roboto-Bold',
+    color: colors.darkestColor,
+    paddingBottom: 10
+  },
+
+  switchView: {
+    position: 'absolute',
+    left: 20,
+    bottom: 30,
+    // height: 150,
+    // width: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
+    //backgroundColor: 'rgba(13, 19, 33, 0.2)',
     borderRadius: 20
   }
 });
