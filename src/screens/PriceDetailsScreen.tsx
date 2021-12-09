@@ -57,7 +57,7 @@ const PriceDetailsScreen = () => {
           <FlatList
             scrollEnabled={true}
             data={currentPostcodeData?.data.sort((a, b) => b.year.localeCompare(a.year))}
-            keyExtractor={(item) => item.address + item.year + item.price}
+            // keyExtractor={(item) => item.address + item.year + item.price}
             renderItem={({ item }) => (
                 <View style={styles.flatListView}>
                     <Text style={styles.flatListTitle}>Price: <Text style={styles.flatListValue}>{'\u00A3'}{item.price.toLocaleString()}</Text></Text>
