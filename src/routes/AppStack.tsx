@@ -2,6 +2,7 @@ import React from 'react';
 import SavedLocationsScreen from "../screens/SavedLocationsScreen";
 import MapScreen from "../screens/MapScreen";
 import AccountScreen from "../screens/AccountScreen";
+import PriceDetailsScreen from "../screens/PriceDetailsScreen";
 import {RootStackParamList} from '../screens/RootStackParams';
 import {TouchableOpacity, Text} from "react-native";
 import {useNavigation} from '@react-navigation/native';
@@ -91,6 +92,31 @@ const StackNav = () => {
           ({navigation}) => ({
           headerShown: true,
           headerTitle: "Account Information",
+          gestureEnabled: true,
+          presentation: 'modal',
+          headerTitleStyle: styles.headerStyle,
+          headerStyle: {backgroundColor: colors.darkestColor,
+          shadowColor: colors.midColor, // iOS
+          elevation: 0 // Android
+        },
+         headerLeft: ()=> null,
+         headerRight: () => (
+           <TouchableOpacity
+             style={{}}
+              onPress={() => navigation.navigate("TabNav")}>
+              <Ionicons name="close" size={30} color={colors.midLightColor} style={{marginRight: 15}} />
+            </TouchableOpacity>
+          )
+        })
+      }
+    />
+    <Stack.Screen
+        name="Price Details"
+        component={PriceDetailsScreen}
+        options={
+          ({navigation}) => ({
+          headerShown: true,
+          headerTitle: "Sale Details",
           gestureEnabled: true,
           presentation: 'modal',
           headerTitleStyle: styles.headerStyle,

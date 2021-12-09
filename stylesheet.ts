@@ -45,12 +45,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     paddingTop: 40
   },
-    subtitle: {
-      fontFamily: 'Roboto-Regular',
-      color: colors.midLightColor,
-      fontSize: 15,
-      paddingHorizontal: 40,
-      paddingVertical: 20
+  subtitle: {
+    fontFamily: 'Roboto-Regular',
+    color: colors.midLightColor,
+    fontSize: 15,
+    paddingHorizontal: 40,
+    paddingVertical: 20
   },
   headerTouchableContainer: {
     paddingHorizontal: 5,
@@ -101,9 +101,9 @@ const styles = StyleSheet.create({
     alignSelf: "center"
   },
   space: {
-      width: 40,
-      height: 40,
-    },
+    width: 40,
+    height: 40,
+  },
   headerStyle: {
     fontFamily: 'Roboto-Bold',
     color: colors.lightestColor,
@@ -186,6 +186,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     //backgroundColor: 'rgba(13, 19, 33, 0.2)',
     borderRadius: 20
+  },
+
+  flatListHeader: {
+    borderBottomColor: colors.midColor,
+    borderBottomWidth: 2,
+    borderColor: colors.midColor
   }
 });
 

@@ -93,29 +93,36 @@ export const ExportMap = () => {
     );
   }
 
-  var formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'GBP',
-    maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
-    // minimumFractionDigits: 0, // (this suffices for whole numbers, but will print 2500.10 as $2,500.1)
-  });
-
   const mapMarkers = () => {
-    if (weightedLatLngArray) {
-      return weightedLatLngArray.map((item) =>
+    if (auth.heatmapData) {
+      return auth.heatmapData.map((item) =>
       <Marker
-        key={item.weight}
+        key={item.areaCode}
         coordinate={{ latitude: item.latitude, longitude: item.longitude }}
-        description={"Average price: " + formatter.format(item.weight)}
+        // description={}
         pinColor={colors.midColor}
-        onPress={(event) => handleMarkerPress(event)}
+        onPress={(event) => handleMarkerPress(event, item.areaCode)}
       >
+        <Callout
+          onPress={() => navigation.navigate("Price Details")}
+          style={{}}
+        >
+          <View>
+            <Text style={styles.calloutTitle}>Click me to view detailed sale data</Text>
+            <Text style={styles.calloutDescription}>Average price for {item.areaCode}: {'\u00A3'}{item.average.toLocaleString()}</Text>
+          </View>
+        </Callout>
       </Marker >
     )
     }
   }
 
-  const handleMarkerPress = (e: MapEvent) => {
+  const handleMarkerPress = (e: MapEvent, postcode: string) => {
+    // set the current postcode state in the app context
+    auth.setCurrentPostcodeDetailWrapper(postcode);
+
+    // open callout with navigation capability to open price data screen
+
     // stop onPress event from propagating to mapView
      e.stopPropagation();
  }
@@ -138,7 +145,7 @@ export const ExportMap = () => {
 
       for(var i = 0; i < auth.heatmapData.length; i++) {
 
-        if (auth.heatmapData[i].average) {
+        if (auth.heatmapData[i].average > 0) {
 
           // create new WeightedLatLng object
           const newEntry = {
@@ -161,104 +168,92 @@ export const ExportMap = () => {
     return (
 
       <View style={[styles.container, {}]}>
-
-          
-        
-      <MapView
-        provider={PROVIDER_GOOGLE}
-        style={styles.map}
-        minZoomLevel={12}
-        maxZoomLevel={20}
-        onPress={ (event) => setMarkerCoordinates(event.nativeEvent.coordinate)}
-        initialRegion={{ latitude: auth.userLocationData.lat,
-          longitude: auth.userLocationData.long,
-          latitudeDelta: latitudeDelta,
-          longitudeDelta: longitudeDelta }}
+        <MapView
+          provider={PROVIDER_GOOGLE}
+          style={styles.map}
+          minZoomLevel={12}
+          maxZoomLevel={20}
+          onPress={ (event) => setMarkerCoordinates(event.nativeEvent.coordinate)}
+          initialRegion={{ latitude: auth.userLocationData.lat,
+            longitude: auth.userLocationData.long,
+            latitudeDelta: latitudeDelta,
+            longitudeDelta: longitudeDelta }}
+          region={region}
           //onRegionChangeComplete runs when the user stops dragging MapView
-        region={region}
-        onRegionChangeComplete={(region) => {
-          // if (latitudeDelta < 0.03) {
-          //   console.log("Lat delta: ", latitudeDelta)
-          // }
-
-          setLatitudeDelta(region.latitudeDelta);
-          setLongitudeDelta(region.longitudeDelta);
-          setRegion(region);
-          // console.log(region.latitude, region.longitude);
-          // if (markerRef && markerRef.current && markerRef.current.showCallout) {
-          //   markerRef.current.showCallout();
-          // }
-        }}
-      >
-        {isEnabled && mapMarkers()}
-
-      <Heatmap
-        key={heatmapRadius}
-        points={weightedLatLngArray}
-        radius={heatmapRadius}
-        // radius={weightedLatLngArray.length*100}
-        opacity={0.7}
-        // gradient={gradientObject} // use default
-      />
+          onRegionChangeComplete={(region) => {
+            setLatitudeDelta(region.latitudeDelta);
+            setLongitudeDelta(region.longitudeDelta);
+            setRegion(region);
+            // console.log(region.latitude, region.longitude);
+            // if (markerRef && markerRef.current && markerRef.current.showCallout) {
+            //   markerRef.current.showCallout();
+            // }
+          }}
+        >
+          
+          {isEnabled && mapMarkers()}
+            
+            <Heatmap
+              key={heatmapRadius}
+              points={weightedLatLngArray}
+              radius={heatmapRadius}
+              // radius={weightedLatLngArray.length*100}
+              opacity={0.7}
+              // gradient={gradientObject} // use default
+            />
       
-      {markerCoordinates &&
-      <Marker 
-        //description={{}}
-        coordinate={markerCoordinates}
-        // onPress={() => console.log("You pressed me!")}
-        //onCalloutPress={() => console.log("You pressed me!")}
-      >
-        <Callout
-          onPress={confirmSaveLocation}
-          style={{}}>
-            <View>
-              <Text style={styles.calloutTitle}>Click me to save this location</Text>
-              <Text style={styles.calloutDescription}>Lat: {markerCoordinates.latitude.toFixed(3)}, Long: {markerCoordinates.longitude.toFixed(3)}</Text>
-            </View>
-        </Callout>
-      </Marker>
-      }
-      
-  
-      {/* <Marker pinColor={colors.lightestColor}
-        title="Current Location"
-        description={"Lat: " + auth.viewLocationData.lat.toFixed(4) + ", Long: " + auth.viewLocationData.long.toFixed(4)}
-        coordinate={{ latitude: auth.viewLocationData.lat, longitude: auth.viewLocationData.long }}/> */}
-    </MapView>
-    <View style={styles.switchView}>
-    <Text style={styles.switchText}>Show markers?</Text>
-      <Switch
-          trackColor={{ false: colors.midDarkColor, true: colors.midDarkColor }}
-          thumbColor={isEnabled ? colors.highlightColor : colors.lightestColor}
-          ios_backgroundColor={colors.midDarkColor}
-          onValueChange={toggleSwitch}
-          value={isEnabled}
-        />
-    </View>
+            {markerCoordinates &&
+              <Marker 
+                coordinate={markerCoordinates}
+                //description={{}}
+                // onPress={() => console.log("You pressed me!")}
+                //onCalloutPress={() => console.log("You pressed me!")}
+              >
+                <Callout
+                  onPress={confirmSaveLocation}
+                  style={{}}
+                >
+                  <View>
+                    <Text style={styles.calloutTitle}>Click me to save this location</Text>
+                    <Text style={styles.calloutDescription}>Lat: {markerCoordinates.latitude.toFixed(3)}, Long: {markerCoordinates.longitude.toFixed(3)}</Text>
+                  </View>
+                </Callout>
+              </Marker>
+            }
+        </MapView>
+        <View style={styles.switchView}>
+          <Text style={styles.switchText}>Show markers?</Text>
+          <Switch
+              trackColor={{ false: colors.midDarkColor, true: colors.midDarkColor }}
+              thumbColor={isEnabled ? colors.highlightColor : colors.lightestColor}
+              ios_backgroundColor={colors.midDarkColor}
+              onValueChange={toggleSwitch}
+              value={isEnabled}
+            />
+        </View>
 
-      <View style={styles.heatmapControlView}>
-        <Text style={styles.heatmapControlText}>Heatmap</Text>
-        <Text style={styles.heatmapControlText}>Radius: {heatmapRadius}</Text>
-        <TouchableOpacity
-          style={{}}
-          onPress={() => {
-            if (heatmapRadius < 500) {
-              setHeatmapRadius(heatmapRadius + 5);
-            }
-          }}>
-          <Ionicons name="add-circle-outline" style={styles.heatmapControlIcons} size={50}/>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            if (heatmapRadius > 10) {
-              setHeatmapRadius(heatmapRadius - 5);
-            }
-          }}>
-          <Ionicons name="remove-circle-outline" style={styles.heatmapControlIcons} size={50}/>
-        </TouchableOpacity>
+        <View style={styles.heatmapControlView}>
+          <Text style={styles.heatmapControlText}>Heatmap</Text>
+          <Text style={styles.heatmapControlText}>Radius: {heatmapRadius}</Text>
+          <TouchableOpacity
+            style={{}}
+            onPress={() => {
+              if (heatmapRadius < 500) {
+                setHeatmapRadius(heatmapRadius + 5);
+              }
+            }}>
+            <Ionicons name="add-circle-outline" style={styles.heatmapControlIcons} size={50}/>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              if (heatmapRadius > 10) {
+                setHeatmapRadius(heatmapRadius - 5);
+              }
+            }}>
+            <Ionicons name="remove-circle-outline" style={styles.heatmapControlIcons} size={50}/>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  
     );
   } else {
     return (
@@ -267,5 +262,4 @@ export const ExportMap = () => {
       </View>
     );
   }
-
 };

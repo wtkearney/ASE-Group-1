@@ -14,8 +14,6 @@ export type locationData = {
   postcode: string;
 }
 
-
-
 type AuthContextData = {
   authData?: AuthData;
   isAuthorised: boolean;
@@ -24,6 +22,7 @@ type AuthContextData = {
   savedLocations?: Array<savedLocationData>;
   // nearestPostcodes?: PostcodeData;
   heatmapData?: Array<heatmapData>;
+  currentPostCodeDetail?: string;
   verifyPassword(email: string, _password: string): Promise<boolean>;
   signUp(firstName: string, lastName: string, email: string, password: string): Promise<void>;
   signIn(email: string, password: string): Promise<void>;
@@ -34,6 +33,7 @@ type AuthContextData = {
   setViewLocationDataWrapper(lat: number, long: number): void;
   deleteAccount(userEmail: string): void;
   loadSavedLocationData(): void;
+  setCurrentPostcodeDetailWrapper(postcode: string): void;
   // getNearestPostcodes(): void;
 };
 
@@ -57,8 +57,15 @@ const AuthProvider: React.FC = ({children}) => {
 
   const [savedLocations, setSavedLocations] = useState<Array<savedLocationData>>();
 
+  const [currentPostCodeDetail, setCurrentPostcodeDetail] = useState<string>();
+
   // AuthContext starts with loading = true and stays like that until the data is loaded from storage
   const [loading, setLoading] = useState(true);
+
+  const setCurrentPostcodeDetailWrapper = (postcode: string) => {
+    // console.log("setting current postcode detail: " + postcode)
+    setCurrentPostcodeDetail(postcode);
+  }
 
   useEffect(() => {
     // Every time the App is opened, do this....
@@ -288,8 +295,10 @@ const AuthProvider: React.FC = ({children}) => {
     // This component will be used to encapsulate the whole App, so all components will have access to the Context
     <AuthContext.Provider value={{
       authData, isAuthorised: loading, userLocationData, heatmapData, savedLocations, viewLocationData,
+      currentPostCodeDetail,
       verifyPassword, deleteAccount, signUp, signIn, signOut, getUserLocationData, loadSavedLocationData,
-      getHeatmapData, saveLocation, setViewLocationDataWrapper}}>
+      getHeatmapData, saveLocation, setViewLocationDataWrapper,
+      setCurrentPostcodeDetailWrapper}}>
       {children}
     </AuthContext.Provider>
   );
