@@ -100,58 +100,82 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: "center"
   },
+    space: {
+        width: 40,
+        height: 40,
+      },
+      headerStyle: {
+        fontFamily: 'Roboto-Bold',
+        color: colors.lightestColor,
+      },
+      textInput: {
+        fontFamily: 'Roboto-Regular',
+        color: colors.lightestColor,
+        borderLeftWidth: 2,
+        borderTopWidth: 2,
+        borderRightWidth: 2,
+        borderBottomWidth: 2,
+        borderRadius: 10,
+        borderColor: "#4a4e69", // misty blue
+        height: 50,
+        marginHorizontal: 40,
+        marginVertical: 10,
+        borderWidth: 1,
+        padding: 10
+      },
+    
+      copyrightNotice : {
+        color: colors.midColor,
+        textAlign: "center",
+        fontSize: 12,
+        paddingHorizontal: 40,
+        alignItems: 'center',
+        justifyContent: 'center',
+      },
 
-  space: {
-    width: 40,
-    height: 40
-  },
-  headerStyle: {
-    fontFamily: 'Roboto-Bold',
-    color: colors.lightestColor
-  },
-  textInput: {
-    fontFamily: 'Roboto-Regular',
-    color: colors.lightestColor,
-    borderLeftWidth: 2,
-    borderTopWidth: 2,
-    borderRightWidth: 2,
-    borderBottomWidth: 2,
-    borderRadius: 10,
-    borderColor: "#4a4e69", // misty blue
-    height: 50,
-    marginHorizontal: 40,
-    marginVertical: 10,
-    borderWidth: 1,
-    padding: 10
-  },
-  copyrightNotice : {
-    color: colors.midColor,
-    textAlign: "center",
-    fontSize: 12,
-    paddingHorizontal: 40,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  flatListTitle: {
-    fontFamily: 'Roboto-Bold',
-    color: colors.lightestColor,
-    paddingVertical: 5,
-    paddingHorizontal: 20,
-    fontSize: 20
-  },
-  flatListValue: {
-    fontFamily: 'Roboto-Regular',
-    color: colors.lightestColor,
-    paddingVertical: 5,
-    paddingHorizontal: 20,
-    fontSize: 15
-  },
-  flatListView: {
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderBottomColor: colors.midColor,
-    borderBottomWidth: 1
-  }
+      flatListTitle: {
+        fontFamily: 'Roboto-Bold',
+        color: colors.lightestColor,
+        paddingVertical: 5,
+        paddingHorizontal: 20,
+        fontSize: 20,
+      },
+
+      flatListValue: {
+        fontFamily: 'Roboto-Regular',
+        color: colors.lightestColor,
+        paddingVertical: 5,
+        paddingHorizontal: 20,
+        fontSize: 15,
+      },
+
+      flatListView: {
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderBottomColor: colors.midColor,
+        borderBottomWidth: 1
+      },
+      
+      heatmapControlText: {
+        fontFamily: 'Roboto-Bold',
+        color: colors.darkestColor
+      },
+
+      heatmapControlIcons: {
+        color: colors.darkestColor
+      },
+
+      heatmapControlView: {
+        position: 'absolute',
+        right: 20,
+        bottom: 20,
+        height: 150,
+        width: 70,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(13, 19, 33, 0.2)',
+        borderRadius: 20
+      }
 });
 
 export {styles, colors};
