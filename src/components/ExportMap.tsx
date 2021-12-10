@@ -164,6 +164,23 @@ export const ExportMap = () => {
     }
   }
 
+  const gradientObject = {
+    colors: [
+      "rgba(102, 255, 0, 1)",
+      "rgba(147, 255, 0, 1)",
+      "rgba(193, 255, 0, 1)",
+      "rgba(238, 255, 0, 1)",
+      "rgba(244, 227, 0, 1)",
+      "rgba(249, 198, 0, 1)",
+      "rgba(255, 170, 0, 1)",
+      "rgba(255, 113, 0, 1)",
+      "rgba(255, 57, 0, 1)",
+      "rgba(255, 0, 0, 1)",
+    ],
+    startPoints: [0.005, 0.01, 0.02, 0.03, 0.04, 0.05, 0.055, 0.065, 0.07, 0.08],
+    colorMapSize: 256,
+  }
+
   if (weightedLatLngArray && auth.heatmapData && auth.userLocationData) {
     return (
 
@@ -199,7 +216,7 @@ export const ExportMap = () => {
               radius={heatmapRadius}
               // radius={weightedLatLngArray.length*100}
               opacity={0.7}
-              // gradient={gradientObject} // use default
+              gradient={gradientObject} // use default
             />
       
             {markerCoordinates &&
