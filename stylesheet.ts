@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   switchView: {
     position: 'absolute',
     right: 30,
-    bottom: 170,
+    bottom: 30,
     height: 90,
     width: 80,
     alignItems: 'center',

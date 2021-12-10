@@ -35,7 +35,6 @@ export type heatmapData = {
     average: number;
     latitude: number;
     longitude: number;
-    data: Array<priceData>;
   }
 
 export type markerData = {
@@ -83,7 +82,7 @@ const getOuterHeatmapData = async (outerPostcode: string): Promise<heatmapData[]
             }
         })
     })
-}
+};
 
 const deleteAccount = async (userEmail: string): Promise<boolean> => {
     // embed the whole function body inside a Promise constructor, so should any error happen, it will be converted to a rejection
@@ -150,8 +149,8 @@ const getSavedLocationData = async (userEmail: string): Promise<savedLocationDat
 const getHeatmapData = async (postcode: string): Promise<heatmapData[]> => {
     // embed the whole function body inside a Promise constructor, so should any error happen, it will be converted to a rejection
     return new Promise((resolve, reject) => {
+        console.log(postcode);
         axios.get(serverURL + apiPath + "/mapview/unit/district/" + postcode)
-        //axios.get(serverURL + apiPath + `/mapview/${postcode}?limit=20&radius=50000`)
         .then((response) => {
               //console.log(response);
             // check response status
@@ -182,7 +181,7 @@ const getMarkerData = async (postcode: string): Promise<markerData[]> => {
 
     // embed the whole function body inside a Promise constructor, so should any error happen, it will be converted to a rejection
     return new Promise((resolve, reject) => {
-        axios.get(serverURL + apiPath + `/mapview/${postcode}?limit=20&radius=50000`)
+        axios.get(serverURL + apiPath + `/mapview/${postcode}?limit=200&radius=20000`)
         .then((response) => {
             // check response status
             if (response.status == 200 || response.status == 304) {

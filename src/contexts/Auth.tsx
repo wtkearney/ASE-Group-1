@@ -68,7 +68,10 @@ const AuthProvider: React.FC = ({children}) => {
   }, []);
 
   useEffect(() => {
-    getHeatmapData(); // <- NEEDS TO BE OPTIMISED, TOO MANY CALLS
+
+    if (true) {
+      getHeatmapData();
+    }
     getMarkerData();
   }, [viewLocationData]);
 
@@ -100,6 +103,12 @@ const AuthProvider: React.FC = ({children}) => {
 
     if (userLocationData) {
       setViewLocationData(userLocationData);
+    }
+
+    if (viewLocationData) {
+      console.log("Getting heatmap and marker data")
+      getHeatmapData();
+      getMarkerData();
     }
 
     

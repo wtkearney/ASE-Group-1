@@ -22,10 +22,13 @@ export const ExportMap = () => {
 
   const navigation = useNavigation<exportMapProp>();
 
-  const [weightedLatLngArray, setWeightedLatLngArray] = useState<WeightedLatLng[]>();
+  const [weightedLatLngArrayHeatmap, setWeightedLatLngArrayHeatmap] = useState<WeightedLatLng[]>([]);
+  const [weightedLatLngArrayMarker, setWeightedLatLngArrayMarker] = useState<WeightedLatLng[]>([]);
   const [latitudeDelta, setLatitudeDelta] = useState(0.005);
   const [longitudeDelta, setLongitudeDelta] = useState(0.005);
   const [heatmapRadius, setHeatmapRadius] = useState(50);
+
+  const [zoom, setZoom] = useState<number>(14);
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
@@ -48,14 +51,23 @@ export const ExportMap = () => {
   useEffect(() => {
     if (markerCoordinates) {
       auth.setViewLocationDataWrapper(markerCoordinates.latitude, markerCoordinates.longitude);
-      updateWeightedArray();
+      updateMarkerWeightedArray();
     }
   }, [markerCoordinates]);
 
   // when the heatmap data updates, update the weighted array used for the heatmap
   useEffect(() => {
-    updateWeightedArray();
+    updateHeatmapWeightedArray();
   }, [auth.heatmapData])
+
+  useEffect(() => {
+    updateMarkerWeightedArray();
+  }, [auth.markerData])
+
+  useEffect(() => {
+    updateHeatmapWeightedArray();
+    updateMarkerWeightedArray();
+  }, [])
 
   useEffect(() => {
       setRegion({
@@ -123,7 +135,31 @@ export const ExportMap = () => {
     navigation.navigate("Saved Locations");
   }
 
-  const updateWeightedArray = async () => {
+  const updateMarkerWeightedArray = async () => {
+    if (auth.markerData) {
+      var tmpArray = new Array<WeightedLatLng>();
+
+      for (let i = 0; i < auth.markerData.length; i++) {
+
+        if (auth.markerData[i].average > 0) {
+
+          // create new WeightedLatLng object
+          const newEntry = {
+            latitude: auth.markerData[i].latitude,
+            longitude: auth.markerData[i].longitude,
+            weight: auth.markerData[i].average
+          }
+
+          // add the entry to our temp array
+          tmpArray.push(newEntry)
+        }
+      } // end for loop
+      // set weighted array state
+      setWeightedLatLngArrayMarker(tmpArray);
+    }
+  }
+
+  const updateHeatmapWeightedArray = async () => {
     if (auth.heatmapData) {
       var tmpArray = new Array<WeightedLatLng>();
 
@@ -143,11 +179,28 @@ export const ExportMap = () => {
         }
       } // end for loop
       // set weighted array state
-      setWeightedLatLngArray(tmpArray);
+      setWeightedLatLngArrayHeatmap(tmpArray);
     }
   }
 
-  if (weightedLatLngArray && auth.heatmapData && auth.userLocationData) {
+  const gradientObject = {
+    colors: [
+      "rgba(102, 255, 0, 1)",
+      "rgba(147, 255, 0, 1)",
+      "rgba(193, 255, 0, 1)",
+      "rgba(238, 255, 0, 1)",
+      "rgba(244, 227, 0, 1)",
+      "rgba(249, 198, 0, 1)",
+      "rgba(255, 170, 0, 1)",
+      "rgba(255, 113, 0, 1)",
+      "rgba(255, 57, 0, 1)",
+      "rgba(255, 0, 0, 1)",
+    ],
+    startPoints: [0.005, 0.01, 0.02, 0.03, 0.04, 0.05, 0.055, 0.065, 0.07, 0.08],
+    colorMapSize: 256,
+  }
+
+  if (auth.markerData && auth.userLocationData) {
     return (
 
       <View style={[styles.container, {}]}>
@@ -167,6 +220,9 @@ export const ExportMap = () => {
             setLatitudeDelta(region.latitudeDelta);
             setLongitudeDelta(region.longitudeDelta);
             setRegion(region);
+            let zoom = Math.log(360 / region.longitudeDelta) / Math.LN2
+            setZoom(zoom);
+            // console.log(zoom);
             // console.log(region.latitude, region.longitude);
             // if (markerRef && markerRef.current && markerRef.current.showCallout) {
             //   markerRef.current.showCallout();
@@ -175,24 +231,25 @@ export const ExportMap = () => {
         >
           
           {isEnabled && mapMarkers()}
-            
-            <Heatmap
+
+          {(zoom > 13.5)? <Heatmap
               key={heatmapRadius}
-              points={weightedLatLngArray}
+              points={weightedLatLngArrayMarker}
               radius={heatmapRadius}
               opacity={0.7}
-              gradient={
-                {
-                  colors: [
-                    "red",
-                    "yellow",
-                    "white"
-                  ],
-                  startPoints: [Number.EPSILON, 0.1, 0.2],
-                  colorMapSize: 256,
-                }
+              gradient={gradientObject
               }
             />
+          :
+          <Heatmap
+              key={heatmapRadius}
+              points={weightedLatLngArrayHeatmap}
+              radius={heatmapRadius}
+              opacity={0.7}
+              gradient={gradientObject
+              }
+            />
+          }
       
             {markerCoordinates &&
               <Marker 
@@ -224,7 +281,7 @@ export const ExportMap = () => {
             />
         </View>
 
-        <View style={styles.heatmapControlView}>
+        {/* <View style={styles.heatmapControlView}>
           <TouchableOpacity onPress={() => setHeatmapRadius(heatmapRadius < 50 ? heatmapRadius + 5 : heatmapRadius)}>
             <Ionicons name="add-circle-outline" style={styles.heatmapControlIcons} size={60}/>
           </TouchableOpacity>
@@ -232,7 +289,7 @@ export const ExportMap = () => {
             onPress={() => setHeatmapRadius(heatmapRadius > 5 ? heatmapRadius - 5 : heatmapRadius)}>
             <Ionicons name="remove-circle-outline" style={styles.heatmapControlIcons} size={60}/>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
     );
   } else {
