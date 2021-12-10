@@ -255,7 +255,7 @@ export const ExportMap = () => {
           <TouchableOpacity
             style={{}}
             onPress={() => {
-              if (heatmapRadius < 500) {
+              if (heatmapRadius < 50) {
                 setHeatmapRadius(heatmapRadius + 5);
               }
             }}>
