@@ -37,7 +37,10 @@ export const ExportMap = () => {
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   useEffect(() => {
-    setHeatmapRadius(250);
+
+    setTimeout(() => setHeatmapRadius(250),
+      1000
+    )
   }, []);
 
   //create a Hook to store our region data.
