@@ -2,7 +2,7 @@ import React, {createContext, useState, useContext, useEffect, Dispatch, SetStat
 // import * as SecureStore from 'expo-secure-store';
 import * as Location from 'expo-location';
 
-import {AuthData, PostcodeData, heatmapData, authService, savedLocationData} from '../services/authService';
+import {AuthData, PostcodeData, heatmapData, authService, savedLocationData, markerData} from '../services/authService';
 import { Alert } from "react-native";
 
 import * as Font from 'expo-font';
@@ -20,8 +20,8 @@ type AuthContextData = {
   userLocationData?: locationData;
   viewLocationData: locationData;
   savedLocations?: Array<savedLocationData>;
-  // nearestPostcodes?: PostcodeData;
   heatmapData?: Array<heatmapData>;
+  markerData?: Array<markerData>;
   currentPostCodeDetail?: string;
   verifyPassword(email: string, _password: string): Promise<boolean>;
   signUp(firstName: string, lastName: string, email: string, password: string): Promise<void>;
@@ -29,6 +29,7 @@ type AuthContextData = {
   signOut(): void;
   getUserLocationData(): void;
   getHeatmapData(): void;
+  getMarkerData(): void;
   saveLocation(lat: number, long: number): void;
   setViewLocationDataWrapper(lat: number, long: number): void;
   deleteAccount(userEmail: string): void;
@@ -48,15 +49,9 @@ const AuthProvider: React.FC = ({children}) => {
 
   // this is the location that will be viewed on the map
   const [viewLocationData, setViewLocationData] = useState<locationData>({lat: 0, long: 0, postcode: ""});
-
   const [heatmapData, setHeatmapData] = useState<Array<heatmapData>>();
-
-  // const [fontLoaded, setFontLoaded] = useState<boolean>(false);
-
-  const [nearestPostcodes, setNearestPostcodes] = useState<PostcodeData>();
-
+  const [markerData, setMarkerData] = useState<Array<markerData>>();
   const [savedLocations, setSavedLocations] = useState<Array<savedLocationData>>();
-
   const [currentPostCodeDetail, setCurrentPostcodeDetail] = useState<string>();
 
   // AuthContext starts with loading = true and stays like that until the data is loaded from storage
@@ -72,14 +67,12 @@ const AuthProvider: React.FC = ({children}) => {
     startUp();
   }, []);
 
-  // everytime locationData is updated, get new neary postcodes
   useEffect(() => {
-    // getNearestPostcodes();
-    getHeatmapData();
-  }, [viewLocationData])
+    getHeatmapData(); // <- NEEDS TO BE OPTIMISED, TOO MANY CALLS
+    getMarkerData();
+  }, [viewLocationData]);
 
   useEffect(() => {
-    // getNearestPostcodes();
     if (userLocationData) {
       const locationData = {
         lat: userLocationData.lat,
@@ -87,7 +80,6 @@ const AuthProvider: React.FC = ({children}) => {
         postcode: userLocationData.postcode
       };
       setViewLocationData(locationData);
-
     }
     
   }, [userLocationData])
@@ -225,18 +217,14 @@ const AuthProvider: React.FC = ({children}) => {
   }
 
   const getHeatmapData = async () => {
-
-    // console.log("Updating heatmap data")
-    
     if (viewLocationData && viewLocationData.postcode) {
-      // var outerCode = userLocationData.postcode.replace(/[" "].*/, '').toUpperCase();
-      // console.log(outerCode);
-      let heatmapData = await authService.getHeatmapData(viewLocationData.postcode);
-      //let heatmapData = await authService.getOuterHeatmapData(outerCode);
+      setHeatmapData(await authService.getHeatmapData(viewLocationData.postcode));
+    }
+  };
 
-      setHeatmapData(heatmapData);
-      // console.log("This is the heatmap data.")
-      // console.log(heatmapData);
+  const getMarkerData = async () => {
+    if (viewLocationData && viewLocationData.postcode) {
+      setMarkerData(await authService.getMarkerData(viewLocationData.postcode));
     }
   };
 
@@ -294,10 +282,10 @@ const AuthProvider: React.FC = ({children}) => {
   return (
     // This component will be used to encapsulate the whole App, so all components will have access to the Context
     <AuthContext.Provider value={{
-      authData, isAuthorised: loading, userLocationData, heatmapData, savedLocations, viewLocationData,
+      authData, isAuthorised: loading, userLocationData, heatmapData, markerData, savedLocations, viewLocationData,
       currentPostCodeDetail,
       verifyPassword, deleteAccount, signUp, signIn, signOut, getUserLocationData, loadSavedLocationData,
-      getHeatmapData, saveLocation, setViewLocationDataWrapper,
+      getHeatmapData, getMarkerData, saveLocation, setViewLocationDataWrapper,
       setCurrentPostcodeDetailWrapper}}>
       {children}
     </AuthContext.Provider>

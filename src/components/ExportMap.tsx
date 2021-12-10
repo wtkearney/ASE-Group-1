@@ -1,16 +1,13 @@
-import React, {useState, useContext, useEffect, useRef} from 'react';
-// import {View, ActivityIndicator} from 'react-native';
-import  MapView, { Marker, Heatmap, PROVIDER_GOOGLE, LatLng, Callout, MapEvent} from 'react-native-maps';
-import {useAuth} from '../contexts/Auth';
-import {styles, colors} from "../../stylesheet";
+import React, { useState, useEffect } from 'react';
+import  MapView, { Marker, Heatmap, PROVIDER_GOOGLE, Callout, MapEvent } from 'react-native-maps';
+import { useAuth } from '../contexts/Auth';
+import { styles, colors } from "../../stylesheet";
 import { View, Text, Alert, Switch, TouchableOpacity } from "react-native";
-import {Loading} from '../components/Loading';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RootStackParamList} from '../screens/RootStackParams';
-import {  } from 'react-native-gesture-handler';
-import {Ionicons} from '@expo/vector-icons';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { Loading } from '../components/Loading';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../screens/RootStackParams';
+import { Ionicons } from '@expo/vector-icons';
 
 type exportMapProp = StackNavigationProp<RootStackParamList, 'ExportMap'>;
 
@@ -21,24 +18,17 @@ export type WeightedLatLng = {
 }
 
 export const ExportMap = () => {
+  const auth = useAuth();
 
   const navigation = useNavigation<exportMapProp>();
 
   const [weightedLatLngArray, setWeightedLatLngArray] = useState<WeightedLatLng[]>();
-
-  const auth = useAuth();
-
-  const [latitudeDelta, setLatitudeDelta] = useState<number>(0.005);
-  const [longitudeDelta, setLongitudeDelta] = useState<number>(0.005);
-
-  const [heatmapRadius, setHeatmapRadius] = useState<number>(50);
+  const [latitudeDelta, setLatitudeDelta] = useState(0.005);
+  const [longitudeDelta, setLongitudeDelta] = useState(0.005);
+  const [heatmapRadius, setHeatmapRadius] = useState(50);
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
-
-  useEffect(() => {
-    setHeatmapRadius(250);
-  }, []);
 
   //create a Hook to store our region data.
   const [region, setRegion] = useState({
@@ -53,7 +43,6 @@ export const ExportMap = () => {
     longitude: auth.viewLocationData.long
   });
 
-
   // when the marker coordinates change, update the view location
   // this will also update the heatmap data
   useEffect(() => {
@@ -61,7 +50,7 @@ export const ExportMap = () => {
       auth.setViewLocationDataWrapper(markerCoordinates.latitude, markerCoordinates.longitude);
       updateWeightedArray();
     }
-  }, [markerCoordinates])
+  }, [markerCoordinates]);
 
   // when the heatmap data updates, update the weighted array used for the heatmap
   useEffect(() => {
@@ -69,15 +58,12 @@ export const ExportMap = () => {
   }, [auth.heatmapData])
 
   useEffect(() => {
-    // setLastPressCoordinates({latitude: auth.viewLocationData.lat,
-    //   longitude: auth.viewLocationData.long})
-    
       setRegion({
         latitude: auth.viewLocationData.lat,
         longitude: auth.viewLocationData.long,
         latitudeDelta: latitudeDelta,
         longitudeDelta: longitudeDelta,
-      })
+      });
 
   }, [auth.viewLocationData])
 
@@ -91,15 +77,15 @@ export const ExportMap = () => {
           onPress: () => console.log("Cancel Pressed"),
           style: "cancel"
         },
-        { text: "OK",
+        { text: "Save",
         onPress: () => saveLocation() }
       ]
     );
   }
 
   const mapMarkers = () => {
-    if (auth.heatmapData) {
-      return auth.heatmapData.map((item) =>
+    if (auth.markerData) {
+      return auth.markerData.map((item) =>
       <Marker
         key={item.areaCode}
         coordinate={{ latitude: item.latitude, longitude: item.longitude }}
@@ -112,8 +98,8 @@ export const ExportMap = () => {
           style={{}}
         >
           <View>
-            <Text style={styles.calloutTitle}>Click me to view detailed sale data</Text>
-            <Text style={styles.calloutDescription}>Average price for {item.areaCode}: {'\u00A3'}{item.average.toLocaleString()}</Text>
+            <Text style={styles.calloutTitle}>Click here to see more information...<Ionicons name="chevron-forward"/></Text>
+            <Text style={styles.calloutDescription}>Average for {item.areaCode}: {'\u00A3'}{item.average.toLocaleString()}</Text>
           </View>
         </Callout>
       </Marker >
@@ -121,20 +107,15 @@ export const ExportMap = () => {
     }
   }
 
-  const handleMarkerPress = (e: MapEvent, postcode: string) => {
+  const handleMarkerPress = (event: MapEvent, postcode: string) => {
     // set the current postcode state in the app context
     auth.setCurrentPostcodeDetailWrapper(postcode);
-
-    // open callout with navigation capability to open price data screen
-
     // stop onPress event from propagating to mapView
-     e.stopPropagation();
+    event.stopPropagation();
  }
 
   const saveLocation = async () => {
-
     console.log("Saving Location!")
-
     if (auth.viewLocationData) {
       auth.saveLocation(auth.viewLocationData.lat, auth.viewLocationData.long);
     }
@@ -143,11 +124,10 @@ export const ExportMap = () => {
   }
 
   const updateWeightedArray = async () => {
-
     if (auth.heatmapData) {
       var tmpArray = new Array<WeightedLatLng>();
 
-      for(var i = 0; i < auth.heatmapData.length; i++) {
+      for (let i = 0; i < auth.heatmapData.length; i++) {
 
         if (auth.heatmapData[i].average > 0) {
 
@@ -157,10 +137,9 @@ export const ExportMap = () => {
             longitude: auth.heatmapData[i].longitude,
             weight: auth.heatmapData[i].average
           }
-  
+
           // add the entry to our temp array
           tmpArray.push(newEntry)
-
         }
       } // end for loop
       // set weighted array state
@@ -201,9 +180,18 @@ export const ExportMap = () => {
               key={heatmapRadius}
               points={weightedLatLngArray}
               radius={heatmapRadius}
-              // radius={weightedLatLngArray.length*100}
               opacity={0.7}
-              // gradient={gradientObject} // use default
+              gradient={
+                {
+                  colors: [
+                    "red",
+                    "yellow",
+                    "white"
+                  ],
+                  startPoints: [Number.EPSILON, 0.1, 0.2],
+                  colorMapSize: 256,
+                }
+              }
             />
       
             {markerCoordinates &&
@@ -226,7 +214,7 @@ export const ExportMap = () => {
             }
         </MapView>
         <View style={styles.switchView}>
-          <Text style={styles.switchText}>Show markers?</Text>
+          <Text style={styles.switchText}>Markers</Text>
           <Switch
               trackColor={{ false: colors.midDarkColor, true: colors.midDarkColor }}
               thumbColor={isEnabled ? colors.highlightColor : colors.lightestColor}
@@ -237,24 +225,12 @@ export const ExportMap = () => {
         </View>
 
         <View style={styles.heatmapControlView}>
-          <Text style={styles.heatmapControlText}>Heatmap</Text>
-          <Text style={styles.heatmapControlText}>Radius: {heatmapRadius}</Text>
-          <TouchableOpacity
-            style={{}}
-            onPress={() => {
-              if (heatmapRadius < 500) {
-                setHeatmapRadius(heatmapRadius + 5);
-              }
-            }}>
-            <Ionicons name="add-circle-outline" style={styles.heatmapControlIcons} size={50}/>
+          <TouchableOpacity onPress={() => setHeatmapRadius(heatmapRadius < 50 ? heatmapRadius + 5 : heatmapRadius)}>
+            <Ionicons name="add-circle-outline" style={styles.heatmapControlIcons} size={60}/>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => {
-              if (heatmapRadius > 10) {
-                setHeatmapRadius(heatmapRadius - 5);
-              }
-            }}>
-            <Ionicons name="remove-circle-outline" style={styles.heatmapControlIcons} size={50}/>
+            onPress={() => setHeatmapRadius(heatmapRadius > 5 ? heatmapRadius - 5 : heatmapRadius)}>
+            <Ionicons name="remove-circle-outline" style={styles.heatmapControlIcons} size={60}/>
           </TouchableOpacity>
         </View>
       </View>

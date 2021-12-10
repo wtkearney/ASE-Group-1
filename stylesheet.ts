@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { color } from "react-native-elements/dist/helpers";
 
 const colors = {
   highlightColor: "#FBC740",
@@ -16,10 +17,10 @@ const styles = StyleSheet.create({
     backgroundColor: colors.darkestColor
   },
   calloutTitle : {
-    // ...
+    fontFamily: 'Roboto-Bold',
   },
   calloutDescription : {
-    // ...
+    fontFamily: 'Roboto-Regular',
   },
 
   fadingContainer: {
@@ -136,7 +137,7 @@ const styles = StyleSheet.create({
     color: colors.lightestColor,
     paddingVertical: 5,
     paddingHorizontal: 20,
-    fontSize: 20,
+    fontSize: 15,
   },
   flatListValue: {
     fontFamily: 'Roboto-Regular',
@@ -153,41 +154,38 @@ const styles = StyleSheet.create({
   },
   heatmapControlText: {
     fontFamily: 'Roboto-Bold',
-    color: colors.darkestColor
+    color: colors.lightestColor
   },
   heatmapControlIcons: {
-    color: colors.darkestColor
+    color: colors.midLightColor
   },
   heatmapControlView: {
     position: 'absolute',
-    right: 20,
+    right: 30,
     bottom: 30,
-    height: 150,
+    height: 140,
     width: 80,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(13, 19, 33, 0.3)',
-    borderRadius: 20
+    backgroundColor: colors.darkestColor,
+    borderRadius: 15
   },
-
   switchText: {
     fontFamily: 'Roboto-Bold',
-    color: colors.darkestColor,
+    color: colors.lightestColor,
     paddingBottom: 10
   },
-
   switchView: {
     position: 'absolute',
-    left: 20,
-    bottom: 30,
-    // height: 150,
-    // width: 80,
+    right: 30,
+    bottom: 170,
+    height: 90,
+    width: 80,
     alignItems: 'center',
     justifyContent: 'center',
-    //backgroundColor: 'rgba(13, 19, 33, 0.2)',
-    borderRadius: 20
+    backgroundColor: colors.darkestColor,
+    borderRadius: 15
   },
-
   flatListHeader: {
     borderBottomColor: colors.midColor,
     borderBottomWidth: 2,
