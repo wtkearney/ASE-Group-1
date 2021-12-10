@@ -31,7 +31,7 @@ export const ExportMap = () => {
   const [latitudeDelta, setLatitudeDelta] = useState<number>(0.005);
   const [longitudeDelta, setLongitudeDelta] = useState<number>(0.005);
 
-  const [heatmapRadius, setHeatmapRadius] = useState<number>(50);
+  const [heatmapRadius, setHeatmapRadius] = useState<number>(30);
 
   const [isEnabled, setIsEnabled] = useState(false);
   const toggleSwitch = () => setIsEnabled(previousState => !previousState);
