@@ -48,6 +48,12 @@ export type PostcodeData = {
     nearestPostcodes: Array<string>;
 }
 
+// const formatPrice = (price: string): string => {
+
+//     return()
+
+// }
+
 const getOuterHeatmapData = async (outerPostcode: string): Promise<heatmapData[]> => {
 
     // embed the whole function body inside a Promise constructor, so should any error happen, it will be converted to a rejection
@@ -145,7 +151,7 @@ const getHeatmapData = async (postcode: string): Promise<heatmapData[]> => {
 
     // embed the whole function body inside a Promise constructor, so should any error happen, it will be converted to a rejection
     return new Promise((resolve, reject) => {
-        axios.get(serverURL + apiPath + `/mapview/${postcode}?limit=20&radius=50000`)
+        axios.get(serverURL + apiPath + `/mapview/${postcode}?limit=50&radius=50000`)
         .then((response) => {
               //console.log(response);
             // check response status
