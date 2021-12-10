@@ -35,6 +35,13 @@ export type heatmapData = {
     average: number;
     latitude: number;
     longitude: number;
+  }
+
+export type markerData = {
+    areaCode: string;
+    average: number;
+    latitude: number;
+    longitude: number;
     data: Array<priceData>;
   }
 
@@ -81,7 +88,7 @@ const getOuterHeatmapData = async (outerPostcode: string): Promise<heatmapData[]
             }
         })
     })
-}
+};
 
 const deleteAccount = async (userEmail: string): Promise<boolean> => {
     // embed the whole function body inside a Promise constructor, so should any error happen, it will be converted to a rejection
@@ -146,12 +153,10 @@ const getSavedLocationData = async (userEmail: string): Promise<savedLocationDat
 }
 
 const getHeatmapData = async (postcode: string): Promise<heatmapData[]> => {
-
-    // console.log(postcode)
-
     // embed the whole function body inside a Promise constructor, so should any error happen, it will be converted to a rejection
     return new Promise((resolve, reject) => {
-        axios.get(serverURL + apiPath + `/mapview/${postcode}?limit=50&radius=50000`)
+        // console.log(postcode);
+        axios.get(serverURL + apiPath + "/mapview/unit/" + postcode)
         .then((response) => {
               //console.log(response);
             // check response status
@@ -162,7 +167,36 @@ const getHeatmapData = async (postcode: string): Promise<heatmapData[]> => {
             }
         })
         .catch(err => {
-            //console.log(err);
+            if (err.response) {
+                console.log(postcode)
+                reject(new Error("Error " + err.response.status ));
+            } else if (err.request) {
+                // client never received a response, or request never left
+                reject(new Error("Client never received a response, or request never left."));
+            } else {
+                // anything else
+                reject(new Error());
+            }
+        })
+    })
+}
+
+const getMarkerData = async (postcode: string): Promise<markerData[]> => {
+
+    // console.log(postcode)
+
+    // embed the whole function body inside a Promise constructor, so should any error happen, it will be converted to a rejection
+    return new Promise((resolve, reject) => {
+        axios.get(serverURL + apiPath + `/mapview/${postcode}?limit=200`)
+        .then((response) => {
+            // check response status
+            if (response.status == 200 || response.status == 304) {
+                resolve(response.data);
+            } else {
+                reject(new Error("Response status code " + response.status ));
+            }
+        })
+        .catch(err => {
             if (err.response) {
                 console.log(postcode)
                 reject(new Error("Error " + err.response.status ));
@@ -356,6 +390,7 @@ export const authService = {
     signUp,
     getNearestPostcodes,
     getHeatmapData,
+    getMarkerData,
     getOuterHeatmapData,
     saveLocation,
     deleteAccount,

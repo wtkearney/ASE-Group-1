@@ -116,7 +116,7 @@ const StackNav = () => {
         options={
           ({navigation}) => ({
           headerShown: true,
-          headerTitle: "Sale Details",
+          headerTitle: "Price Paid Data",
           gestureEnabled: true,
           presentation: 'modal',
           headerTitleStyle: styles.headerStyle,

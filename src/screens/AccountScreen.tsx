@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
-import {Text, View, TouchableOpacity, FlatList, Alert} from "react-native";
-import {styles, colors} from "../../stylesheet";
-import {useAuth} from '../contexts/Auth';
+import React, { useState } from 'react';
+import { Text, View, TouchableOpacity, FlatList, Alert } from "react-native";
 import Dialog from "react-native-dialog";
-import {Ionicons} from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+import { styles, colors } from "../../stylesheet";
+import { useAuth } from '../contexts/Auth';
 
 const AccountScreen = () => {
   const auth = useAuth();
