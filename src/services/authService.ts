@@ -149,8 +149,8 @@ const getSavedLocationData = async (userEmail: string): Promise<savedLocationDat
 const getHeatmapData = async (postcode: string): Promise<heatmapData[]> => {
     // embed the whole function body inside a Promise constructor, so should any error happen, it will be converted to a rejection
     return new Promise((resolve, reject) => {
-        console.log(postcode);
-        axios.get(serverURL + apiPath + "/mapview/unit/district/" + postcode)
+        // console.log(postcode);
+        axios.get(serverURL + apiPath + "/mapview/unit/" + postcode)
         .then((response) => {
               //console.log(response);
             // check response status
@@ -181,7 +181,7 @@ const getMarkerData = async (postcode: string): Promise<markerData[]> => {
 
     // embed the whole function body inside a Promise constructor, so should any error happen, it will be converted to a rejection
     return new Promise((resolve, reject) => {
-        axios.get(serverURL + apiPath + `/mapview/${postcode}?limit=200&radius=20000`)
+        axios.get(serverURL + apiPath + `/mapview/${postcode}?limit=200`)
         .then((response) => {
             // check response status
             if (response.status == 200 || response.status == 304) {

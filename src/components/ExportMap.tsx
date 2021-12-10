@@ -232,7 +232,7 @@ export const ExportMap = () => {
           
           {isEnabled && mapMarkers()}
 
-          {(zoom > 13.5)? <Heatmap
+          {(zoom > 12)? <Heatmap
               key={heatmapRadius}
               points={weightedLatLngArrayMarker}
               radius={heatmapRadius}
